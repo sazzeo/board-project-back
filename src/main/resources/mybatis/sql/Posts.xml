@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jy.board.posts.dao.PostsRepository">
+
+    <!-- 첨부파일 정보조회 -->
+    <select id="selectPosts" resultType="PostsDto">
+        SELECT *
+        FROM Posts
+    </select>
+
+    <select id="selectPost" resultType="PostsDto">
+        SELECT *
+        FROM POSTS
+        WHERE POSTS_SEQ = #{postsSeq}
+    </select>
+
+    <insert id="insertPost" parameterType="PostsDto">
+        INSERT INTO POSTS(TITLE, CONTENT , MEMBER)
+        VALUES(#{title} , #{content} , #{member})
+        <selectKey keyProperty="postsSeq" resultType="long" order="AFTER">
+            select currval('POSTS_SEQ')
+        </selectKey>
+    </insert>
+
+    <update id="updatePost" parameterType="PostsDto">
+        UPDATE POSTS
+        SET TITLE   = #{title}
+          , CONTENT = #{content}
+          , MEMBER  = #{MEMBER}
+        WHERE POSTS_SEQ = #{postsSeq}
+    </update>
+
+    <update id="updatePostsViews" parameterType="long">
+        UPDATE POSTS
+        SET VIEWS = VIEWS + 1
+        WHERE POSTS_SEQ = #{postsSeq}
+    </update>
+
+</mapper>
