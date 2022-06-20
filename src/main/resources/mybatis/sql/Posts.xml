@@ -23,6 +23,11 @@
         </selectKey>
     </insert>
 
+    <insert id="insertTag" parameterType="TagsDto">
+        INSERT INTO TAGS(POSTS_SEQ,TAG_NAME)
+        VALUES(#{postsSeq} , #{tagName})
+    </insert>
+
     <update id="updatePost" parameterType="PostsDto">
         UPDATE POSTS
         SET TITLE   = #{title}

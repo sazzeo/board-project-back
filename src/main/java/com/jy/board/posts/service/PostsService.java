@@ -2,6 +2,7 @@ package com.jy.board.posts.service;
 
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
+import com.jy.board.posts.model.TagsDto;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,9 +32,14 @@ public class PostsService {
 
 
     @Transactional
-    public void insertPost(PostsDto postsDto) {
+    public void insertPost(PostsDto postsDto , List<TagsDto> tagsDto) {
 
         postsRepository.insertPost(postsDto);
+        System.out.println(">>>>>>>>>>>포스트 dto : " + postsDto.getPostsSeq());
+        for (TagsDto dto : tagsDto) {
+            dto.setPostsSeq(postsDto.getPostsSeq());
+            postsRepository.insertTag(dto);
+        }
 
     }
 

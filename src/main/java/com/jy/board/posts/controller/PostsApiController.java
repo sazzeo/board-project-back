@@ -1,15 +1,16 @@
 package com.jy.board.posts.controller;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
+import com.jy.board.posts.model.PostsSaveDto;
+import com.jy.board.posts.model.TagsDto;
 import com.jy.board.posts.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class PostsApiController {
 
     private final String URI_PREFIX = "/api/board";
+
+    //private final ObjectMapper mapper;
 
 
     private final PostsService postsService;
@@ -35,12 +38,18 @@ public class PostsApiController {
     }
 
     @PostMapping(URI_PREFIX+"/posts")
-    public String addPosts(PostsDto postsDto) {
+    public String addPosts(@RequestBody PostsSaveDto postsSaveDto) {
+        System.out.println(postsSaveDto);
 
-        //postsRepository.insertPost(postsDto);
+        PostsDto postsDto = postsSaveDto.getPostsDto();
+        List<TagsDto> tagsDto = postsSaveDto.getTagsDto();
+
+        postsService.insertPost(postsDto , tagsDto);
 
         return "ok";
     }
+
+
 
 
 }

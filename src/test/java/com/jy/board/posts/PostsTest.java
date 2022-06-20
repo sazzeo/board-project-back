@@ -39,8 +39,5 @@ public class PostsTest {
                 .member("작성자")
                 .build();
 
-        postsService.insertPost(postsDto);
-        System.out.println(postsDto.getPostsSeq());
-
     }
 }
