@@ -40,4 +40,10 @@ public class PostsTest {
                 .build();
 
     }
+
+    @Test
+    public void serviceTest() {
+      //   System.out.println(postsService.selectPosts());
+        System.out.println(postsRepository.test());
+    }
 }

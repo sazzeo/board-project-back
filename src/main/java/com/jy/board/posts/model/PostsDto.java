@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ToString
 @Data
@@ -19,6 +20,8 @@ public class PostsDto {
     private String member;
     private Date regDate;
     private int views;
+
+    private List<TagsDto> tagList;
 
 
     @Builder

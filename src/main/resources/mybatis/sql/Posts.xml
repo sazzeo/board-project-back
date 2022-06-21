@@ -24,8 +24,8 @@
     </insert>
 
     <insert id="insertTag" parameterType="TagsDto">
-        INSERT INTO TAGS(POSTS_SEQ,TAG_NAME)
-        VALUES(#{postsSeq} , #{tagName})
+        INSERT INTO TAGS(POSTS_SEQ, TAG_NAME)
+        VALUES (#{postsSeq}, #{tagName})
     </insert>
 
     <update id="updatePost" parameterType="PostsDto">
@@ -41,5 +41,42 @@
         SET VIEWS = VIEWS + 1
         WHERE POSTS_SEQ = #{postsSeq}
     </update>
+
+    <select id="selectTagsBySeq" parameterType="Long" resultType="TagsDto">
+        SELECT TAG_NAME
+        FROM TAGS
+        where POSTS_SEQ = #{postsSeq}
+        order by TAG_SEQ;
+    </select>
+
+    <select id="selectTagsBySeqList" parameterType="list" resultType="TagsDto">
+        SELECT POSTS_SEQ ,TAG_NAME
+        FROM TAGS
+        where POSTS_SEQ in
+        <foreach collection="seqList" item="seq" index="index" separator="," open="(" close=")">
+            #{seq}
+        </foreach>
+        order by TAG_SEQ;
+    </select>
+
+    <resultMap type="PostsDto" id="postsAndTags">
+        <id property="postsSeq" column="POSTS_SEQ"/>
+        <result property="title" column="TITLE" />
+        <result property="content" column="CONTENT" />
+        <result property="member" column="MEMBER" />
+        <result property="regDate" column="REG_DATE" />
+        <result property="views" column="VIEWS" />
+        <collection property="tagList" ofType="TagsDto">
+            <id property="tagSeq" column="TAG_SEQ" />
+            <result property="tagName" column="TAG_NAME" />
+        </collection>
+    </resultMap>
+
+    <select id="test" resultMap="postsAndTags">
+        select *
+        from tags t , posts p
+        where t.posts_seq = p.posts_seq
+    </select>
+
 
 </mapper>
