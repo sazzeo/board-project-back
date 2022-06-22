@@ -4,10 +4,10 @@
 <mapper namespace="com.jy.board.posts.dao.PostsRepository">
 
     <!-- 첨부파일 정보조회 -->
-    <select id="selectPosts" resultType="PostsDto">
-        SELECT *
-        FROM Posts
-    </select>
+    <!--    <select id="selectPosts" resultType="PostsDto">-->
+    <!--        SELECT *-->
+    <!--        FROM Posts-->
+    <!--    </select>-->
 
     <select id="selectPost" resultType="PostsDto">
         SELECT *
@@ -61,21 +61,30 @@
 
     <resultMap type="PostsDto" id="postsAndTags">
         <id property="postsSeq" column="POSTS_SEQ"/>
-        <result property="title" column="TITLE" />
-        <result property="content" column="CONTENT" />
-        <result property="member" column="MEMBER" />
-        <result property="regDate" column="REG_DATE" />
-        <result property="views" column="VIEWS" />
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="member" column="MEMBER"/>
+        <result property="regDate" column="REG_DATE"/>
+        <result property="views" column="VIEWS"/>
         <collection property="tagList" ofType="TagsDto">
-            <id property="tagSeq" column="TAG_SEQ" />
-            <result property="tagName" column="TAG_NAME" />
+            <id property="tagSeq" column="TAG_SEQ"/>
+            <result property="tagName" column="TAG_NAME"/>
         </collection>
     </resultMap>
 
-    <select id="test" resultMap="postsAndTags">
-        select *
-        from tags t , posts p
-        where t.posts_seq = p.posts_seq
+
+    <select id="selectPosts" resultMap="postsAndTags" resultType="PostsDto">
+        SELECT P.POSTS_SEQ,
+               P.TITLE,
+               P.CONTENT,
+               P.MEMBER,
+               P.REG_DATE,
+               P.VIEWS,
+               T.TAG_NAME
+        FROM POSTS p
+                 LEFT JOIN TAGS t
+                           USING (posts_seq)
+        ORDER BY P.POSTS_SEQ DESC, T.TAG_SEQ ASC;
     </select>
 
 
