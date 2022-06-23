@@ -44,11 +44,11 @@ public class PostsService {
 
 
     @Transactional
-    public void insertPost(PostsDto postsDto, List<TagsDto> tagsDto) {
+    public void insertPost(PostsDto postsDto) {
 
         postsRepository.insertPost(postsDto);
-        System.out.println(">>>>>>>>>>>포스트 dto : " + postsDto.getPostsSeq());
-        for (TagsDto dto : tagsDto) {
+
+        for (TagsDto dto : postsDto.getTagList()) {
             dto.setPostsSeq(postsDto.getPostsSeq());
             postsRepository.insertTag(dto);
         }

@@ -15,11 +15,20 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation('org.springframework.boot:spring-boot-starter-web')
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    //롬복
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    implementation('org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2')
+
+    //마이바티스
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+
+    //마이바티스 단위테스트
+    implementation('org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2')
     implementation('org.springframework.boot:spring-boot-starter-actuator')
+
+    //postgresql
     implementation(group: 'org.postgresql' , name:'postgresql' , version: '42.2.19')
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

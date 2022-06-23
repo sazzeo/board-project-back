@@ -1,17 +1,12 @@
 package com.jy.board.posts.controller;
 
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
-import com.jy.board.posts.model.PostsSaveDto;
-import com.jy.board.posts.model.TagsDto;
 import com.jy.board.posts.service.PostsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -49,14 +44,9 @@ public class PostsApiController {
 
 
     @PostMapping(URI_PREFIX+"/posts")
-    public String addPosts(@RequestBody PostsSaveDto postsSaveDto) {
-        System.out.println(postsSaveDto);
-
-        PostsDto postsDto = postsSaveDto.getPostsDto();
-        List<TagsDto> tagsDto = postsSaveDto.getTagsDto();
-
-        postsService.insertPost(postsDto , tagsDto);
-
+    public String addPosts(@Valid @RequestBody PostsDto postsDto) {
+        System.out.println(postsDto);
+        postsService.insertPost(postsDto);
         return "ok";
     }
 

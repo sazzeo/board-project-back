@@ -1,4 +1,4 @@
-package com.jy.board.common;
+package com.jy.board.common.util;
 
 
 import org.springframework.jdbc.support.JdbcUtils;

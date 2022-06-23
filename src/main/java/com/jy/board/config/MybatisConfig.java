@@ -1,8 +1,7 @@
 package com.jy.board.config;
 
 
-import com.jy.board.common.CamelMap;
-import org.apache.ibatis.session.SqlSession;
+import com.jy.board.common.util.CamelMap;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;
