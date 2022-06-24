@@ -1,5 +1,6 @@
 package com.jy.board.posts.service;
 
+import com.jy.board.common.pagination.Pageable;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
@@ -15,27 +16,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostsService {
 
-
     private final PostsRepository postsRepository;
 
     @Transactional
-    public List<PostsDto> selectPosts() {
-        List<PostsDto> postList = postsRepository.selectPosts();
-        List<Long> seqList = postList.stream().map(PostsDto::getPostsSeq).collect(Collectors.toList());
-        List<TagsDto> tagsDtos = postsRepository.selectTagsBySeqList(seqList);
+    public List<PostsDto> selectPosts(Pageable pageable) {
 
-        postList = postList.stream().map((post) -> {
-            List<TagsDto> tags = tagsDtos.stream().filter(tag -> tag.getPostsSeq().equals(post.getPostsSeq()))
-                    .collect(Collectors.toList());
-            post.setTagList(tags);
-            return post;
-        }).collect(Collectors.toList());
-
-        return postList;
-
-        //마이바티스 컬렉션 태그 만들기!!
-
+        return postsRepository.selectPosts(pageable);
     }
+
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
         postsRepository.updatePostsViews(postsSeq); //조회수 up
@@ -61,4 +49,12 @@ public class PostsService {
 
         return TagNameList;
     }
+
+    @Transactional
+    public List<TagsDto> selectTagsOrderByTop(Integer size) {
+        size = size == null ? 3 : size;
+        return postsRepository.selectTagsOrderByTop(size);
+    }
+
+
 }

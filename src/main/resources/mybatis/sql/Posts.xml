@@ -9,13 +9,13 @@
     <!--        FROM Posts-->
     <!--    </select>-->
 
-    <select id="selectPost" resultType="PostsDto">
+    <select id="selectPost" resultType="postsDto">
         SELECT *
         FROM POSTS
         WHERE POSTS_SEQ = #{postsSeq}
     </select>
 
-    <insert id="insertPost" parameterType="PostsDto">
+    <insert id="insertPost" parameterType="postsDto">
         INSERT INTO POSTS(TITLE, CONTENT , MEMBER)
         VALUES(#{title} , #{content} , #{member})
         <selectKey keyProperty="postsSeq" resultType="long" order="AFTER">
@@ -23,12 +23,12 @@
         </selectKey>
     </insert>
 
-    <insert id="insertTag" parameterType="TagsDto">
+    <insert id="insertTag" parameterType="tagsDto">
         INSERT INTO TAGS(POSTS_SEQ, TAG_NAME)
         VALUES (#{postsSeq}, #{tagName})
     </insert>
 
-    <update id="updatePost" parameterType="PostsDto">
+    <update id="updatePost" parameterType="postsDto">
         UPDATE POSTS
         SET TITLE   = #{title}
           , CONTENT = #{content}
@@ -42,14 +42,14 @@
         WHERE POSTS_SEQ = #{postsSeq}
     </update>
 
-    <select id="selectTagsBySeq" parameterType="Long" resultType="TagsDto">
+    <select id="selectTagsBySeq" parameterType="long" resultType="tagsDto">
         SELECT TAG_NAME
         FROM TAGS
         where POSTS_SEQ = #{postsSeq}
         order by TAG_SEQ;
     </select>
 
-    <select id="selectTagsBySeqList" parameterType="list" resultType="TagsDto">
+    <select id="selectTagsBySeqList" parameterType="list" resultType="tagsDto">
         SELECT POSTS_SEQ ,TAG_NAME
         FROM TAGS
         where POSTS_SEQ in
@@ -59,33 +59,36 @@
         order by TAG_SEQ;
     </select>
 
-    <resultMap type="PostsDto" id="postsAndTags">
+    <resultMap type="postsDto" id="postsAndTags">
         <id property="postsSeq" column="POSTS_SEQ"/>
         <result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
         <result property="member" column="MEMBER"/>
         <result property="regDate" column="REG_DATE"/>
         <result property="views" column="VIEWS"/>
-        <collection property="tagList" ofType="TagsDto">
+        <collection property="tagList" ofType="tagsDto">
             <id property="tagSeq" column="TAG_SEQ"/>
             <result property="tagName" column="TAG_NAME"/>
         </collection>
     </resultMap>
 
 
-    <select id="selectPosts" resultMap="postsAndTags" resultType="PostsDto">
-        SELECT P.POSTS_SEQ,
-               P.TITLE,
-               P.CONTENT,
-               P.MEMBER,
-               P.REG_DATE,
-               P.VIEWS,
-               T.TAG_NAME
-        FROM POSTS p
-                 LEFT JOIN TAGS t
-                           USING (posts_seq)
-        ORDER BY P.POSTS_SEQ DESC, T.TAG_SEQ ASC;
+    <select id="selectPosts" resultMap="postsAndTags" resultType="postsDto">
+        <include refid="Pagination.pagingHeader"/>
+                 POSTS.* ,
+                 TAGS.TAG_NAME
+              FROM POSTS
+              LEFT JOIN TAGS
+              USING (POSTS_SEQ)) POSTS
+        <include refid="Pagination.pagingFooter"/>
     </select>
 
+    <select id="selectTagsOrderByTop" resultType="tagsDto">
+        SELECT TAG_NAME, COUNT(TAG_NAME) COUNT
+        FROM TAGS
+        GROUP BY TAG_NAME
+        HAVING COUNT (*) >= #{size}
+        ORDER BY COUNT DESC
+    </select>
 
 </mapper>

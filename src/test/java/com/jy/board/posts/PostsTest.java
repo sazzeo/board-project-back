@@ -1,6 +1,7 @@
 package com.jy.board.posts;
 
 
+import com.jy.board.common.pagination.Pageable;
 import com.jy.board.config.MybatisConfig;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
@@ -25,8 +26,8 @@ public class PostsTest {
 
     @Test
     public void selectPostsTest() {
-
-        System.out.println(postsRepository.selectPosts());
+        Pageable pageable = new Pageable();
+        System.out.println(postsRepository.selectPosts(pageable));
 
 
     }
@@ -44,6 +45,13 @@ public class PostsTest {
     @Test
     public void serviceTest() {
       //   System.out.println(postsService.selectPosts());
-        System.out.println(postsRepository.test());
+     //   System.out.println(postsRepository.test());
+    }
+
+    @Test
+    public void selectTags() {
+        System.out.println(postsRepository.selectTagsOrderByTop(3));
+
+
     }
 }

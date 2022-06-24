@@ -1,6 +1,7 @@
 package com.jy.board.posts.dao;
 
 
+import com.jy.board.common.pagination.Pageable;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,8 +11,9 @@ import java.util.List;
 
 @Mapper
 public interface PostsRepository {
-
-    List<PostsDto> selectPosts() ;
+    
+    //전체 posts 조회
+    List<PostsDto> selectPosts(Pageable pageable) ;
 
     int insertPost(PostsDto postsDto);
 
@@ -25,8 +27,7 @@ public interface PostsRepository {
 
     List<TagsDto> selectTagsBySeqList(@Param(value = "seqList") List<Long> seqList);
 
-
-    List<TagsDto> test();
+    List<TagsDto> selectTagsOrderByTop(int size);
 
 
 }

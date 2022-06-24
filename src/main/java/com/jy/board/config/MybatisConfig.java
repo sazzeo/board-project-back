@@ -1,6 +1,7 @@
 package com.jy.board.config;
 
 
+import com.jy.board.common.pagination.PaginationInterceptor;
 import com.jy.board.common.util.CamelMap;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -23,6 +24,9 @@ public class MybatisConfig {
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
+
+        //페이지네이션 인터셉터 등록
+        sessionFactory.setPlugins(new PaginationInterceptor());
 
         Resource[] res = new PathMatchingResourcePatternResolver().getResources("classpath:mybatis/sql/*.xml");
         sessionFactory.setMapperLocations(res);
