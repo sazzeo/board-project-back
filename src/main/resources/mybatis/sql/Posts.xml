@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.jy.board.posts.dao.PostsRepository">
-
-    <!-- 첨부파일 정보조회 -->
-    <!--    <select id="selectPosts" resultType="PostsDto">-->
-    <!--        SELECT *-->
-    <!--        FROM Posts-->
-    <!--    </select>-->
 
     <select id="selectPost" resultType="postsDto">
         SELECT *
@@ -89,6 +82,12 @@
         GROUP BY TAG_NAME
         HAVING COUNT (*) >= #{size}
         ORDER BY COUNT DESC
+    </select>
+
+    <select id="selectPostsByTagName" resultType="postsDto">
+        SELECT * FROM POSTS
+        WHERE POSTS_SEQ IN(SELECT POSTS_SEQ FROM TAGS
+                            WHERE TAG_NAME = #{tagName})
     </select>
 
 </mapper>

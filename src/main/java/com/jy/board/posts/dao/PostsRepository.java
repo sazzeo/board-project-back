@@ -29,5 +29,7 @@ public interface PostsRepository {
 
     List<TagsDto> selectTagsOrderByTop(int size);
 
+    List<PostsDto> selectPostsByTagName(String tagName);
+
 
 }
