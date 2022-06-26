@@ -67,5 +67,12 @@ public class PostsApiController {
 
 
 
+    //태그 이름으로 게시글 조회
+    @GetMapping(URI_PREFIX + "/posts/tags/{tagName}")
+    public List<PostsDto> findPostsByTagName(@PathVariable String tagName) {
+        System.out.println(tagName);
+        return postsService.selectPostsByTagName(tagName);
+    }
+
 
 }

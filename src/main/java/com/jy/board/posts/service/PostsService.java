@@ -57,4 +57,10 @@ public class PostsService {
     }
 
 
+    @Transactional
+    public List<PostsDto> selectPostsByTagName(String tagName) {
+        return postsRepository.selectPostsByTagName(tagName);
+    }
+
+
 }
