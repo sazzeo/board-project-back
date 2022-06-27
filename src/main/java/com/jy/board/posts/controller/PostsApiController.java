@@ -40,7 +40,7 @@ public class PostsApiController {
 
     //게시글 단건 조회
     @GetMapping(URI_PREFIX + "/posts/{postsSeq}")
-    public PostsDto findPost(@PathVariable Long postsSeq, SpringDataWebProperties.Pageable pageable) {
+    public PostsDto findPost(@PathVariable Long postsSeq) {
 
         return postsService.selectPostBySeq(postsSeq);
     }
@@ -53,11 +53,20 @@ public class PostsApiController {
     }
 
 
+
+    //게시글 등록
     @PostMapping(URI_PREFIX+"/posts")
     public String addPosts(@Valid @RequestBody PostsDto postsDto) {
         postsService.insertPost(postsDto);
         return "ok";
     }
+
+    @PutMapping(URI_PREFIX + "/posts/{postsSeq}")
+    public String updatePost(@PathVariable Long postsSeq , @RequestBody PostsDto postsDto) {
+        postsService.updatePost(postsSeq , postsDto);
+        return "ok";
+    }
+
 
     //tags 전체 리스트 조회 ( top 3)
     @GetMapping(URI_PREFIX+"/tags")
@@ -70,8 +79,8 @@ public class PostsApiController {
     //태그 이름으로 게시글 조회
     @GetMapping(URI_PREFIX + "/posts/tags/{tagName}")
     public List<PostsDto> findPostsByTagName(@PathVariable String tagName) {
-        System.out.println(tagName);
-        return postsService.selectPostsByTagName(tagName);
+        Pageable pageable = new Pageable();
+        return postsService.selectPostsByTagName(tagName , pageable);
     }
 
 

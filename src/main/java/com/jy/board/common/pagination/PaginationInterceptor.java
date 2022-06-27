@@ -1,5 +1,6 @@
 package com.jy.board.common.pagination;
 
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
@@ -9,7 +10,9 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 
@@ -32,15 +35,27 @@ public class PaginationInterceptor  implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        System.out.println("마이바티스 인터셉터 실행");
 
 
-        for(Object o : invocation.getArgs()) {
-            System.out.println(o);
-        }
 
-        //여기--------------------
-        System.out.println( "얍" + ((MappedStatement) invocation.getArgs()[0]).getSqlSource());
+//        MappedStatement mappedStatement = (MappedStatement)  invocation.getArgs()[0];
+//        Object param = invocation.getArgs()[1];
+//        MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) param;
+//        Map<String , Object> newParamMap = new HashMap<>();
+//        if(param.getClass().equals(MapperMethod.ParamMap.class)) {
+//
+//            for (Object o : paramMap.keySet()) {
+//                String key = (String) o ;
+//                if(key.contains("param")) {
+//                    newParamMap.put( key , paramMap.get(o));
+//                }
+//            }
+//        }
+//
+//        System.out.println(newParamMap);
+//
+//        //여기--------------------
+//        System.out.println( (mappedStatement.getBoundSql(param).getSql()));
 
         return invocation.proceed();  //sql문 실행
     }
@@ -54,4 +69,5 @@ public class PaginationInterceptor  implements Interceptor {
     public void setProperties(Properties properties) {
         Interceptor.super.setProperties(properties);
     }
+
 }

@@ -54,4 +54,11 @@ public class PostsTest {
 
 
     }
+    @Test
+    public void selectPost() {
+        Long seq = 100022L;
+        System.out.println(postsRepository.selectPost(seq));
+
+
+    }
 }

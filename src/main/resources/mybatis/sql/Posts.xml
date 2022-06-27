@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.board.posts.dao.PostsRepository">
 
-    <select id="selectPost" resultType="postsDto">
+    <select id="selectPost" resultMap="postsAndTags" resultType="postsDto">
         SELECT *
-        FROM POSTS
-        WHERE POSTS_SEQ = #{postsSeq}
+        FROM (SELECT POSTS.*
+              FROM POSTS
+              WHERE POSTS_SEQ = #{postsSeq}) POSTS
+                 LEFT JOIN TAGS
+                           USING (POSTS_SEQ);
     </select>
 
     <insert id="insertPost" parameterType="postsDto">
@@ -25,7 +28,6 @@
         UPDATE POSTS
         SET TITLE   = #{title}
           , CONTENT = #{content}
-          , MEMBER  = #{MEMBER}
         WHERE POSTS_SEQ = #{postsSeq}
     </update>
 
@@ -68,11 +70,11 @@
 
     <select id="selectPosts" resultMap="postsAndTags" resultType="postsDto">
         <include refid="Pagination.pagingHeader"/>
-                 POSTS.* ,
-                 TAGS.TAG_NAME
-              FROM POSTS
-              LEFT JOIN TAGS
-              USING (POSTS_SEQ)) POSTS
+        POSTS.* ,
+        TAGS.TAG_NAME
+        FROM POSTS
+        LEFT JOIN TAGS
+        USING (POSTS_SEQ)) POSTS
         <include refid="Pagination.pagingFooter"/>
     </select>
 
@@ -84,10 +86,23 @@
         ORDER BY COUNT DESC
     </select>
 
-    <select id="selectPostsByTagName" resultType="postsDto">
-        SELECT * FROM POSTS
-        WHERE POSTS_SEQ IN(SELECT POSTS_SEQ FROM TAGS
-                            WHERE TAG_NAME = #{tagName})
+    <select id="selectPostsByTagName" resultMap="postsAndTags" resultType="postsDto">
+        <include refid="Pagination.pagingHeader"/>
+        POSTS.* ,
+        TAGS.TAG_NAME
+        FROM POSTS
+        LEFT JOIN TAGS
+        USING (POSTS_SEQ)
+        <if test="tagName != null">
+            WHERE POSTS_SEQ
+            IN (SELECT
+            POSTS_SEQ
+            FROM TAGS
+            WHERE TAG_NAME = #{tagName})
+        </if>
+        ) POSTS
+        --임시
+        WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end}
     </select>
 
 </mapper>

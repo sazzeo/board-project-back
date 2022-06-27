@@ -23,4 +23,11 @@ public class ExceptionAdvice {
         return responseEntity.error( message , HttpStatus.BAD_REQUEST);
     }
 
+
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<Map<String , Object>> customException(CustomException e) {
+        return responseEntity.error( e.getMessage() , e.getExceptionCode().getHttpStatus());
+    }
+
 }

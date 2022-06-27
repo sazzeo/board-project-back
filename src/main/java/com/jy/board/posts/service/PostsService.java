@@ -1,5 +1,7 @@
 package com.jy.board.posts.service;
 
+import com.jy.board.common.exception.CustomException;
+import com.jy.board.common.exception.ExceptionCode;
 import com.jy.board.common.pagination.Pageable;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
@@ -21,13 +23,13 @@ public class PostsService {
     @Transactional
     public List<PostsDto> selectPosts(Pageable pageable) {
 
-        return postsRepository.selectPosts(pageable);
+        return postsRepository.selectPosts(pageable );
     }
 
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
         postsRepository.updatePostsViews(postsSeq); //조회수 up
-        return postsRepository.selectPost(postsSeq);
+        return postsRepository.selectPost(postsSeq).get();
     }
 
 
@@ -43,7 +45,16 @@ public class PostsService {
 
     }
 
+    @Transactional
+    public void updatePost(Long postsSeq , PostsDto postsDto) {
 
+        postsRepository.selectPost(postsSeq)
+                .orElseThrow(() -> new CustomException(ExceptionCode.PATH_ERROR));
+        postsDto.setPostsSeq(postsSeq);
+        postsRepository.updatePost(postsDto);
+    }
+
+    @Transactional
     public List<String> selectTagListBySeq(Long postsSeq) {
         List<String> TagNameList = postsRepository.selectTagsBySeq(postsSeq).stream().map(TagsDto::getTagName).collect(Collectors.toList());
 
@@ -58,8 +69,8 @@ public class PostsService {
 
 
     @Transactional
-    public List<PostsDto> selectPostsByTagName(String tagName) {
-        return postsRepository.selectPostsByTagName(tagName);
+    public List<PostsDto> selectPostsByTagName(String tagName , Pageable pageable ) {
+        return postsRepository.selectPostsByTagName(tagName ,pageable );
     }
 
 

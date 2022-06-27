@@ -6,8 +6,10 @@ import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface PostsRepository {
@@ -19,9 +21,13 @@ public interface PostsRepository {
 
     int insertTag(TagsDto tagsDto);
 
+    int updatePost(PostsDto postsDto);
+
     int updatePostsViews(Long postsSeq);
 
-    PostsDto selectPost(Long postsSeq);
+
+    //단건조회
+    Optional<PostsDto> selectPost(Long postsSeq);
 
     List<TagsDto> selectTagsBySeq(Long postsSeq);
 
@@ -29,7 +35,7 @@ public interface PostsRepository {
 
     List<TagsDto> selectTagsOrderByTop(int size);
 
-    List<PostsDto> selectPostsByTagName(String tagName);
+    List<PostsDto> selectPostsByTagName(@Param(value = "tagName") String tagName , @Param(value = "pageable") Pageable pageable);
 
 
 }
