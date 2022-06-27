@@ -38,4 +38,7 @@ public interface PostsRepository {
     List<PostsDto> selectPostsByTagName(@Param(value = "tagName") String tagName , @Param(value = "pageable") Pageable pageable);
 
 
+    int deletePostsBySeq(Long postsSeq);
+
+    int deleteTagsByPostsSeq(Long postsSeq);
 }

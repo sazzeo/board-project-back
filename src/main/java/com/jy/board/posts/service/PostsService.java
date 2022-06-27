@@ -74,4 +74,8 @@ public class PostsService {
     }
 
 
+    public void deletePosts(Long postsSeq) {
+        postsRepository.deleteTagsByPostsSeq(postsSeq);
+        postsRepository.deletePostsBySeq(postsSeq);
+    }
 }

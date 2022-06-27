@@ -66,6 +66,14 @@ public class PostsApiController {
         postsService.updatePost(postsSeq , postsDto);
         return "ok";
     }
+    
+    
+    //게시글 삭제
+    @DeleteMapping(URI_PREFIX + "/posts/{postsSeq}")
+    public String removePost(@PathVariable Long postsSeq) {
+        postsService.deletePosts(postsSeq);
+        return "ok";
+    }
 
 
     //tags 전체 리스트 조회 ( top 3)
