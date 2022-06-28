@@ -10,10 +10,8 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.sql.ResultSet;
+import java.util.*;
 
 
 //마이바티스용 인터셉터
@@ -37,6 +35,21 @@ public class PaginationInterceptor  implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
 
 
+        MappedStatement statement = (MappedStatement) invocation.getArgs()[0];
+        Object param = invocation.getArgs()[1];
+        RowBounds row = (RowBounds) invocation.getArgs()[2];
+        ResultHandler result  = (ResultHandler) invocation.getArgs()[3];
+
+        System.out.println("아이디:" + statement.getId());
+        System.out.println("쿼리 스트링" + statement.getBoundSql(param).getSql());
+
+        System.out.println("getResource: " + statement.getKeyProperties());
+
+        List<Object> res = (ArrayList<Object>) invocation.proceed();
+
+        System.out.println(">>>>>>>>>>>>>>>>"); //result Type알아 올 수 있음.
+        System.out.println(res); //result Type알아 올 수 있음.
+        System.out.println(">>>>>>>>>>>>>>>>"); //result Type알아 올 수 있음.
 
 //        MappedStatement mappedStatement = (MappedStatement)  invocation.getArgs()[0];
 //        Object param = invocation.getArgs()[1];

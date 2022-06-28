@@ -67,10 +67,18 @@
         </collection>
     </resultMap>
 
+    <sql id="postsColumn">
+        POSTS.POSTS_SEQ,
+        POSTS.TITLE ,
+        SUBSTR(POSTS.CONTENT , 1, 80) AS CONTENT,
+        POSTS.MEMBER ,
+        POSTS.REG_DATE ,
+        POSTS.VIEWS
+    </sql>
 
     <select id="selectPosts" resultMap="postsAndTags" resultType="postsDto">
         <include refid="Pagination.pagingHeader"/>
-        POSTS.* ,
+        <include refid="postsColumn"/> ,
         TAGS.TAG_NAME
         FROM POSTS
         LEFT JOIN TAGS
@@ -83,7 +91,7 @@
         FROM TAGS
         GROUP BY TAG_NAME
         HAVING COUNT (*) >= #{size}
-        ORDER BY COUNT DESC , TAG_NAME
+        ORDER BY COUNT DESC, TAG_NAME
     </select>
 
     <select id="selectPostsByTagName" resultMap="postsAndTags" resultType="postsDto">
@@ -105,16 +113,25 @@
         WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end}
     </select>
 
+    <!--    게시글 삭제-->
     <delete id="deletePostsBySeq">
         DELETE
         FROM POSTS
         WHERE POSTS_SEQ = #{postsSeq}
     </delete>
 
+    <!--    게시글 삭제시 태그도 삭제-->
     <delete id="deleteTagsByPostsSeq">
         DELETE
         FROM TAGS
         WHERE POSTS_SEQ = #{postsSeq}
+    </delete>
+
+    <!--    태그 단건 삭제-->
+    <delete id="deleteTagsBySeq">
+        DELETE
+        FROM TAGS
+        WHERE TAG_SEQ = #{tagSeq}
     </delete>
 
 </mapper>

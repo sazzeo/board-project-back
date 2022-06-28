@@ -29,7 +29,7 @@ public class PostsService {
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
         postsRepository.updatePostsViews(postsSeq); //조회수 up
-        return postsRepository.selectPost(postsSeq).get();
+        return postsRepository.selectPost(postsSeq);
     }
 
 
@@ -47,10 +47,25 @@ public class PostsService {
 
     @Transactional
     public void updatePost(Long postsSeq , PostsDto postsDto) {
-
-        postsRepository.selectPost(postsSeq)
-                .orElseThrow(() -> new CustomException(ExceptionCode.PATH_ERROR));
         postsDto.setPostsSeq(postsSeq);
+
+        //원래 태그
+        List<TagsDto> tags = postsRepository.selectPost(postsSeq).getTagList();
+        //수정된 태그
+        List<TagsDto> newTags = postsDto.getTagList();
+
+        //없어진 태그 삭제하기
+        tags.stream().filter(tag-> !newTags.contains(tag))
+                .forEach(removeTag->{
+                    postsRepository.deleteTagsBySeq(removeTag.getTagSeq());
+                });
+        //새로 생긴 태그 추가하기
+        newTags.removeAll(tags);
+        newTags.forEach(insertTag-> {
+            insertTag.setPostsSeq(postsSeq);
+            postsRepository.insertTag(insertTag);
+        });
+
         postsRepository.updatePost(postsDto);
     }
 

@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface PostsRepository {
     
     //전체 posts 조회
-    List<PostsDto> selectPosts(Pageable pageable) ;
+    List<PostsDto> selectPosts(Pageable pageable);
 
     int insertPost(PostsDto postsDto);
 
@@ -25,9 +25,8 @@ public interface PostsRepository {
 
     int updatePostsViews(Long postsSeq);
 
-
     //단건조회
-    Optional<PostsDto> selectPost(Long postsSeq);
+    PostsDto selectPost(Long postsSeq);
 
     List<TagsDto> selectTagsBySeq(Long postsSeq);
 
@@ -37,8 +36,10 @@ public interface PostsRepository {
 
     List<PostsDto> selectPostsByTagName(@Param(value = "tagName") String tagName , @Param(value = "pageable") Pageable pageable);
 
-
     int deletePostsBySeq(Long postsSeq);
 
     int deleteTagsByPostsSeq(Long postsSeq);
+
+
+    int deleteTagsBySeq(Long tagSeq);
 }

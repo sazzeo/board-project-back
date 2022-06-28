@@ -63,7 +63,7 @@ public class PostsApiController {
 
     @PutMapping(URI_PREFIX + "/posts/{postsSeq}")
     public String updatePost(@PathVariable Long postsSeq , @RequestBody PostsDto postsDto) {
-        postsService.updatePost(postsSeq , postsDto);
+       postsService.updatePost(postsSeq , postsDto);
         return "ok";
     }
     
