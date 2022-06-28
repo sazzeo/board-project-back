@@ -10,6 +10,7 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+import javax.el.MethodInfo;
 import java.sql.ResultSet;
 import java.util.*;
 
@@ -37,19 +38,49 @@ public class PaginationInterceptor  implements Interceptor {
 
         MappedStatement statement = (MappedStatement) invocation.getArgs()[0];
         Object param = invocation.getArgs()[1];
-        RowBounds row = (RowBounds) invocation.getArgs()[2];
-        ResultHandler result  = (ResultHandler) invocation.getArgs()[3];
 
-        System.out.println("아이디:" + statement.getId());
-        System.out.println("쿼리 스트링" + statement.getBoundSql(param).getSql());
+        Object result = invocation.proceed();
+        Pageable pageable = null;
+        if(param.getClass().equals(Pageable.class) ) {
+             pageable = (Pageable) param;
+         }
+        if(param.getClass().equals(MapperMethod.ParamMap.class)) {
+            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap)param;
+             pageable = (Pageable) paramMap.get("pageable");
+        }
 
-        System.out.println("getResource: " + statement.getKeyProperties());
+        if(pageable != null) {
+            if(result.getClass().equals(ArrayList.class)) {
+                List resultList = (ArrayList) result;
 
-        List<Object> res = (ArrayList<Object>) invocation.proceed();
+                if(resultList.size()>0) {
+                    Long count = (Long) ((HashMap) resultList.get(0)).get("count");
+                    System.out.println(count);
+                    if(count !=null) {
+                        pageable.setTotalElements(count);
+                    }
+                    PageableResponse<Object> pageableResponse = new PageableResponse<>();
+                    pageableResponse.setList(resultList);
+                    pageableResponse.setPageable(pageable);
+                    return pageableResponse;
+                }
+            }
+        }
 
-        System.out.println(">>>>>>>>>>>>>>>>"); //result Type알아 올 수 있음.
-        System.out.println(res); //result Type알아 올 수 있음.
-        System.out.println(">>>>>>>>>>>>>>>>"); //result Type알아 올 수 있음.
+
+
+
+//
+//        System.out.println("아이디:" + statement.getId());
+//        System.out.println("쿼리 스트링" + statement.getBoundSql(param).getSql());
+//
+//        System.out.println("getResource: " + statement.getKeyProperties());
+//
+//        List<Object> res = (ArrayList<Object>) invocation.proceed();
+//
+//        System.out.println(">>>>>>>>>>>>>>>>"); //result Type알아 올 수 있음.
+//        System.out.println(res); //result Type알아 올 수 있음.
+//        System.out.println(">>>>>>>>>>>>>>>>"); //result Type알아 올 수 있음.
 
 //        MappedStatement mappedStatement = (MappedStatement)  invocation.getArgs()[0];
 //        Object param = invocation.getArgs()[1];
@@ -70,7 +101,7 @@ public class PaginationInterceptor  implements Interceptor {
 //        //여기--------------------
 //        System.out.println( (mappedStatement.getBoundSql(param).getSql()));
 
-        return invocation.proceed();  //sql문 실행
+        return result;  //sql문 실행
     }
 
     @Override

@@ -54,18 +54,19 @@
         order by TAG_SEQ;
     </select>
 
-    <resultMap type="postsDto" id="postsAndTags">
+    <resultMap type="map" id="postsAndTags">
         <id property="postsSeq" column="POSTS_SEQ"/>
         <result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
         <result property="member" column="MEMBER"/>
         <result property="regDate" column="REG_DATE"/>
         <result property="views" column="VIEWS"/>
-        <collection property="tagList" ofType="tagsDto">
+        <collection property="tagList" ofType="map" javaType="map">
             <id property="tagSeq" column="TAG_SEQ"/>
             <result property="tagName" column="TAG_NAME"/>
         </collection>
     </resultMap>
+
 
     <sql id="postsColumn">
         POSTS.POSTS_SEQ,
@@ -76,7 +77,7 @@
         POSTS.VIEWS
     </sql>
 
-    <select id="selectPosts" resultMap="postsAndTags" resultType="postsDto">
+    <select id="selectPosts" resultMap="postsAndTags" resultType="map">
         <include refid="Pagination.pagingHeader"/>
         <include refid="postsColumn"/> ,
         TAGS.TAG_NAME

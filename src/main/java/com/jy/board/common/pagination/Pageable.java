@@ -16,7 +16,7 @@ public class Pageable {
     private int totalPages;
 
     //전체 요소 수
-    private int totalElements;
+    private Long totalElements;
 
     private int start;
     private int end;
@@ -46,5 +46,10 @@ public class Pageable {
 
     public int getEnd() {
         return (page+1)*size;
+    }
+
+    public int getTotalPages() {
+        if(totalElements!=null)  return (int)(totalElements/size) +1;
+        return 0;
     }
 }
