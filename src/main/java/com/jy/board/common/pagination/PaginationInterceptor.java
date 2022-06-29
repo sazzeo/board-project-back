@@ -1,5 +1,6 @@
 package com.jy.board.common.pagination;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -9,10 +10,12 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.el.MethodInfo;
-import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
 
 //마이바티스용 인터셉터
@@ -29,6 +32,9 @@ import java.util.*;
 )})
 public class PaginationInterceptor  implements Interceptor {
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public PaginationInterceptor() {
     }
 
@@ -38,31 +44,38 @@ public class PaginationInterceptor  implements Interceptor {
 
         MappedStatement statement = (MappedStatement) invocation.getArgs()[0];
         Object param = invocation.getArgs()[1];
-
         Object result = invocation.proceed();
         Pageable pageable = null;
+
         if(param.getClass().equals(Pageable.class) ) {
              pageable = (Pageable) param;
-         }
-        if(param.getClass().equals(MapperMethod.ParamMap.class)) {
+         }else if(param.getClass().equals(MapperMethod.ParamMap.class)) {
             MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap)param;
              pageable = (Pageable) paramMap.get("pageable");
+        }else {
+
+            return result;
         }
 
+
         if(pageable != null) {
+
             if(result.getClass().equals(ArrayList.class)) {
                 List resultList = (ArrayList) result;
 
                 if(resultList.size()>0) {
                     Long count = (Long) ((HashMap) resultList.get(0)).get("count");
-                    System.out.println(count);
                     if(count !=null) {
+
                         pageable.setTotalElements(count);
                     }
+
                     PageableResponse<Object> pageableResponse = new PageableResponse<>();
                     pageableResponse.setList(resultList);
                     pageableResponse.setPageable(pageable);
-                    return pageableResponse;
+
+                    return pageableResponse.get();
+                    //return pageableResponse;
                 }
             }
         }

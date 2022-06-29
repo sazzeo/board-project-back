@@ -6,6 +6,7 @@ import com.jy.board.common.pagination.Pageable;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,16 +21,25 @@ public class PostsService {
 
     private final PostsRepository postsRepository;
 
+
+    //게시글 리스트 조회
     @Transactional
     public List<PostsDto> selectPosts(Pageable pageable) {
-
-        return postsRepository.selectPosts(pageable );
+        List<PostsDto> res = postsRepository.selectPosts(pageable);
+        System.out.println(res);
+        System.out.println(pageable);
+        return res;
     }
 
+
+    //게시글 단건조회
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
+        PostsDto postsDto = postsRepository.selectPost(postsSeq);
+
+        if(postsDto == null) throw new CustomException(ExceptionCode.PATH_ERROR);
         postsRepository.updatePostsViews(postsSeq); //조회수 up
-        return postsRepository.selectPost(postsSeq);
+        return postsDto;
     }
 
 
@@ -57,6 +67,7 @@ public class PostsService {
         //없어진 태그 삭제하기
         tags.stream().filter(tag-> !newTags.contains(tag))
                 .forEach(removeTag->{
+                    //바꾸기!!
                     postsRepository.deleteTagsBySeq(removeTag.getTagSeq());
                 });
         //새로 생긴 태그 추가하기
@@ -85,7 +96,7 @@ public class PostsService {
 
     @Transactional
     public List<PostsDto> selectPostsByTagName(String tagName , Pageable pageable ) {
-        return postsRepository.selectPostsByTagName(tagName ,pageable );
+        return postsRepository.selectPostsByTagName(tagName ,pageable);
     }
 
 

@@ -8,4 +8,7 @@
         FROM POSTS
     </select>
 
+    <select id="selectTest2" resultType="map" >
+        ${query}
+    </select>
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jy.board.posts.dao.PostsRepository">
 
-    <select id="selectPost" resultMap="postsAndTags" resultType="postsDto">
+    <select id="selectPost" resultMap="postsAndTags2" resultType="postsDto">
         SELECT *
         FROM (SELECT POSTS.*
               FROM POSTS
@@ -61,7 +61,23 @@
         <result property="member" column="MEMBER"/>
         <result property="regDate" column="REG_DATE"/>
         <result property="views" column="VIEWS"/>
-        <collection property="tagList" ofType="map" javaType="map">
+        <result property="count" column="COUNT"/>
+        <collection property="tagList" ofType="map" javaType="list">
+            <id property="tagSeq" column="TAG_SEQ"/>
+            <result property="tagName" column="TAG_NAME"/>
+        </collection>
+    </resultMap>
+
+
+    <resultMap type="postsDto" id="postsAndTags2">
+        <id property="postsSeq" column="POSTS_SEQ"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="member" column="MEMBER"/>
+        <result property="regDate" column="REG_DATE"/>
+        <result property="views" column="VIEWS"/>
+        <!--        <result property="count" column="COUNT"/>-->
+        <collection property="tagList" ofType="tagsDto">
             <id property="tagSeq" column="TAG_SEQ"/>
             <result property="tagName" column="TAG_NAME"/>
         </collection>
@@ -69,17 +85,23 @@
 
 
     <sql id="postsColumn">
-        POSTS.POSTS_SEQ,
+        POSTS
+        .
+        POSTS_SEQ
+        ,
         POSTS.TITLE ,
         SUBSTR(POSTS.CONTENT , 1, 80) AS CONTENT,
         POSTS.MEMBER ,
         POSTS.REG_DATE ,
         POSTS.VIEWS
+        --(SELECT COUNT(*) FROM POSTS) AS COUNT
     </sql>
 
     <select id="selectPosts" resultMap="postsAndTags" resultType="map">
         <include refid="Pagination.pagingHeader"/>
-        <include refid="postsColumn"/> ,
+        <include refid="postsColumn"/>
+        ,
+        (SELECT COUNT(*) FROM POSTS) AS COUNT ,
         TAGS.TAG_NAME
         FROM POSTS
         LEFT JOIN TAGS
@@ -99,19 +121,17 @@
         <include refid="Pagination.pagingHeader"/>
         POSTS.* ,
         TAGS.TAG_NAME
+        FROM (SELECT POSTS.* , COUNT(POSTS_SEQ) OVER() COUNT
         FROM POSTS
+        WHERE POSTS_SEQ IN (SELECT
+        POSTS_SEQ
+        FROM TAGS
+        WHERE TAG_NAME = #{tagName})
+        ) POSTS
         LEFT JOIN TAGS
         USING (POSTS_SEQ)
-        <if test="tagName != null">
-            WHERE POSTS_SEQ
-            IN (SELECT
-            POSTS_SEQ
-            FROM TAGS
-            WHERE TAG_NAME = #{tagName})
-        </if>
         ) POSTS
-        --임시
-        WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end}
+        WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end} --임시
     </select>
 
     <!--    게시글 삭제-->

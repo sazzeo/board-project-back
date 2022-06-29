@@ -2,6 +2,7 @@ package com.jy.board.posts.dao;
 
 
 import com.jy.board.common.pagination.Pageable;
+import com.jy.board.common.pagination.PageableResponse;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import org.apache.ibatis.annotations.Mapper;

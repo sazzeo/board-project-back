@@ -35,11 +35,10 @@ public class TempTest {
 
         System.out.println("테스트코드");
 
-      //  인터셉터 전까지는 쟤를 따라가다가? 매핑될때 애가 헤까닥 돌아버림이군
 
-        PageableResponse<PostsDto> post =   testRepository.selectTest(new Pageable());
-        System.out.println(post.get());
-        System.out.println(post.getPageable());
+
+        System.out.println(  testRepository.selectTest2("select * from tags"));
+
         
     }
     @Test
@@ -48,6 +47,15 @@ public class TempTest {
         System.out.println("테스트코드");
 
         System.out.println(postsRepository.selectPosts(new Pageable()));
+
+    }
+
+    @Test void test3() {
+
+        List<String> list = new ArrayList<>();
+        boolean a = list instanceof ArrayList;
+        System.out.println(a);
+
 
     }
 }

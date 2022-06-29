@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Map;
 
@@ -27,7 +28,13 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<Map<String , Object>> customException(CustomException e) {
-        return responseEntity.error( e.getMessage() , e.getExceptionCode().getHttpStatus());
+        return responseEntity.error( e.getExceptionCode() );
+    }
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String , Object>> customException(MethodArgumentTypeMismatchException e) {
+        return responseEntity.error( ExceptionCode.PATH_ERROR );
     }
 
 }

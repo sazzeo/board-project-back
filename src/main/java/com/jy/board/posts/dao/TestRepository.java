@@ -14,4 +14,6 @@ public interface TestRepository {
 
     PageableResponse<PostsDto> selectTest(Pageable pageable);
 
+    List<Map<String, String>> selectTest2(String query);
+
 }

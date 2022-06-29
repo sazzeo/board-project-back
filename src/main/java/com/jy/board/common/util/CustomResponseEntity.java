@@ -1,5 +1,6 @@
 package com.jy.board.common.util;
 
+import com.jy.board.common.exception.ExceptionCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,18 @@ public class CustomResponseEntity<T> {
         return new ResponseEntity<>(map , status);
 
     }
+
+
+    public ResponseEntity<Map<String, Object>> error(ExceptionCode exceptionCode) {
+        Map<String , Object> map = new HashMap<>();
+        map.put("message" , exceptionCode.getMessage() );
+        map.put("status" , exceptionCode.getHttpStatus());
+        map.put("redirectPath" , exceptionCode.getRedirectPath());
+        return new ResponseEntity<>(map , exceptionCode.getHttpStatus());
+
+    }
+
+
 
 
     public ResponseEntity<T> success(T object , HttpStatus status) {

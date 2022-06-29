@@ -1,6 +1,8 @@
 package com.jy.board.posts.controller;
 
 
+import com.jy.board.common.exception.CustomException;
+import com.jy.board.common.exception.ExceptionCode;
 import com.jy.board.common.pagination.PageDefault;
 import com.jy.board.common.pagination.Pageable;
 import com.jy.board.common.util.CustomResponseEntity;
@@ -14,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,10 +35,14 @@ public class PostsApiController {
 
     //게시글 목록 조회
     @GetMapping(URI_PREFIX+"/posts")
-    public ResponseEntity<List<PostsDto>> findPosts(@PageDefault Pageable pageable) {
-        //Pageable pageable = new Pageable();
-        System.out.println(pageable);
-        return responseEntity.success(postsService.selectPosts(pageable) , HttpStatus.OK);
+    public ResponseEntity<Map<String , Object>> findPosts(Pageable pageable) {
+
+        System.out.println("페이지:::::::::::::>>" + pageable);
+
+        Map<String,  Object> map = new HashMap<>();
+        map.put("posts" , postsService.selectPosts(pageable));
+        map.put("pageable" , pageable);
+        return responseEntity.success(map, HttpStatus.OK);
 
     }
 
@@ -86,9 +94,12 @@ public class PostsApiController {
 
     //태그 이름으로 게시글 조회
     @GetMapping(URI_PREFIX + "/posts/tags/{tagName}")
-    public List<PostsDto> findPostsByTagName(@PathVariable String tagName) {
+    public ResponseEntity<List<PostsDto>> findPostsByTagName(@PathVariable String tagName) {
         Pageable pageable = new Pageable();
-        return postsService.selectPostsByTagName(tagName , pageable);
+        Map<String,  Object> map = new HashMap<>();
+        map.put("posts" , postsService.selectPostsByTagName(tagName , pageable));
+        map.put("pageable" , pageable);
+        return responseEntity.success(map, HttpStatus.OK);
     }
 
 
