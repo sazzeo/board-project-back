@@ -35,7 +35,7 @@ public class PostsApiController {
 
     //게시글 목록 조회
     @GetMapping(URI_PREFIX+"/posts")
-    public ResponseEntity<Map<String , Object>> findPosts(Pageable pageable) {
+    public ResponseEntity<Map<String , Object>> findPosts(@PageDefault Pageable pageable) {
 
         System.out.println("페이지:::::::::::::>>" + pageable);
 

@@ -50,7 +50,9 @@ public class Pageable {
     }
 
     public int getTotalPages() {
-        if(totalElements!=null)  return (int)(totalElements/size) +1;
+        if(totalElements!=null) {
+                return (int)(totalElements/size) + (totalElements% size ==0 ? 0 : 1);
+        }
         return 0;
     }
 }

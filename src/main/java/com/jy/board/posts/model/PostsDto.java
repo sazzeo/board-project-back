@@ -19,6 +19,8 @@ public class PostsDto {
     private Long postsSeq;
     @NotEmpty
     private String title;
+
+    @NotEmpty
     private String content;
     private String member;
     private Date regDate;
