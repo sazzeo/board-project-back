@@ -1,6 +1,5 @@
 package com.jy.board.posts.model;
 
-import com.jy.board.common.pagination.Id;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,6 @@ import java.util.List;
 @Alias("postsDto")
 public class PostsDto {
 
-    @Id
     private Long postsSeq;
     @NotEmpty
     private String title;

@@ -17,6 +17,7 @@ public interface PostsRepository {
     
     //전체 posts 조회
     List<PostsDto> selectPosts(Pageable pageable);
+    List<PostsDto> selectPostsAsOption(@Param("pageable") Pageable pageable ,@Param("s") String s , @Param("o") String o );
 
     int insertPost(PostsDto postsDto);
 
@@ -42,5 +43,5 @@ public interface PostsRepository {
     int deleteTagsByPostsSeq(Long postsSeq);
 
 
-    int deleteTagsBySeq(Long tagSeq);
+    int deleteTagsBySeqList(List<Long> tagSeqList);
 }

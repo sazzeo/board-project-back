@@ -24,8 +24,18 @@ public class PostsService {
     @Transactional
     public List<PostsDto> selectPosts(Pageable pageable) {
         List<PostsDto> res = postsRepository.selectPosts(pageable);
-        System.out.println(res);
-        System.out.println(pageable);
+        return res;
+    }
+
+    //검색조건 있는 경우
+  @Transactional
+    public List<PostsDto> selectPosts(Pageable pageable ,String s,String o) {
+      List<PostsDto> res = null;
+        if(s !=null) {
+            res = postsRepository.selectPostsAsOption(pageable , s , o );
+        }else {
+            res = postsRepository.selectPosts(pageable);
+        }
         return res;
     }
 
@@ -63,11 +73,15 @@ public class PostsService {
         List<TagsDto> newTags = postsDto.getTagList();
 
         //없어진 태그 삭제하기
-        tags.stream().filter(tag-> !newTags.contains(tag))
-                .forEach(removeTag->{
-                    //바꾸기!!
-                    postsRepository.deleteTagsBySeq(removeTag.getTagSeq());
-                });
+        List<Long> tagSeqList = tags.stream()
+                .filter(tag-> !newTags.contains(tag))
+                .map(TagsDto::getTagSeq)
+                .collect(Collectors.toList());
+
+        if(tagSeqList.size()>0) {
+            postsRepository.deleteTagsBySeqList(tagSeqList);
+        }
+
         //새로 생긴 태그 추가하기
         newTags.removeAll(tags);
         newTags.forEach(insertTag-> {

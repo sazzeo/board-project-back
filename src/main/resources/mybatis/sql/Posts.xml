@@ -8,7 +8,7 @@
               FROM POSTS
               WHERE POSTS_SEQ = #{postsSeq}) POSTS
                  LEFT JOIN TAGS
-                           USING (POSTS_SEQ);
+                           USING (POSTS_SEQ)
     </select>
 
     <insert id="insertPost" parameterType="postsDto">
@@ -54,6 +54,7 @@
         order by TAG_SEQ;
     </select>
 
+    <!--    카운트 있는 버전-->
     <resultMap type="map" id="postsAndTags">
         <id property="postsSeq" column="POSTS_SEQ"/>
         <result property="title" column="TITLE"/>
@@ -68,7 +69,7 @@
         </collection>
     </resultMap>
 
-
+    <!--카운트 없는버전-->
     <resultMap type="postsDto" id="postsAndTags2">
         <id property="postsSeq" column="POSTS_SEQ"/>
         <result property="title" column="TITLE"/>
@@ -85,10 +86,7 @@
 
 
     <sql id="postsColumn">
-        POSTS
-        .
-        POSTS_SEQ
-        ,
+        POSTS.POSTS_SEQ,
         POSTS.TITLE ,
         SUBSTR(POSTS.CONTENT , 1, 80) AS CONTENT,
         POSTS.MEMBER ,
@@ -99,15 +97,50 @@
 
     <select id="selectPosts" resultMap="postsAndTags" resultType="map">
         <include refid="Pagination.pagingHeader"/>
-        <include refid="postsColumn"/>
-        ,
-        (SELECT COUNT(*) FROM POSTS) AS COUNT ,
+        <include refid="postsColumn"/>,
+        TAGS.TAG_SEQ ,
+        (SELECT COUNT(*) FROM POSTS) AS COUNT , --count * 빼기!!!!
         TAGS.TAG_NAME
         FROM POSTS
         LEFT JOIN TAGS
         USING (POSTS_SEQ)) POSTS
         <include refid="Pagination.pagingFooter"/>
+        ORDER BY ROWNUM , TAG_SEQ
     </select>
+
+
+    <select id="selectPostsAsOption" resultMap="postsAndTags" resultType="map">
+        <include refid="Pagination.pagingHeader"/>
+        POSTS.* ,
+        TAGS.TAG_SEQ ,
+        TAGS.TAG_NAME
+        FROM (SELECT POSTS.* , COUNT(POSTS_SEQ) OVER() COUNT
+        FROM POSTS
+        <where>
+            <if test="o == '제목' or o=='전체'">
+                and TITLE LIKE '%' || #{s} || '%'
+            </if>
+            <if test="o == '내용' or o=='전체' ">
+                and CONTENT LIKE '%' || #{s} || '%'
+            </if>
+            <if test="o == '작성자' or o=='전체' ">
+                and MEMBER LIKE '%' || #{s} || '%'
+            </if>
+            <if test="o == '태그' or o=='전체' ">
+                and  POSTS_SEQ IN (
+                SELECT POSTS_SEQ FROM tags
+                WHERE TAG_NAME LIKE #{s}
+                )
+            </if>
+        </where>
+        ) POSTS
+        LEFT JOIN TAGS
+        USING (POSTS_SEQ)
+        ) POSTS
+        WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end} --임시
+        ORDER BY ROWNUM , TAG_SEQ
+    </select>
+
 
     <select id="selectTagsOrderByTop" resultType="tagsDto">
         SELECT TAG_NAME, COUNT(TAG_NAME) COUNT
@@ -120,6 +153,7 @@
     <select id="selectPostsByTagName" resultMap="postsAndTags" resultType="postsDto">
         <include refid="Pagination.pagingHeader"/>
         POSTS.* ,
+        TAGS.TAG_SEQ ,
         TAGS.TAG_NAME
         FROM (SELECT POSTS.* , COUNT(POSTS_SEQ) OVER() COUNT
         FROM POSTS
@@ -132,6 +166,7 @@
         USING (POSTS_SEQ)
         ) POSTS
         WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end} --임시
+        ORDER BY ROWNUM , TAG_SEQ
     </select>
 
     <!--    게시글 삭제-->
@@ -149,10 +184,13 @@
     </delete>
 
     <!--    태그 단건 삭제-->
-    <delete id="deleteTagsBySeq">
+    <delete id="deleteTagsBySeqList">
         DELETE
         FROM TAGS
-        WHERE TAG_SEQ = #{tagSeq}
+        WHERE TAG_SEQ IN
+        <foreach collection="list" item="tagSeq" index="index" separator="," open="(" close=")">
+            #{tagSeq}
+        </foreach>
     </delete>
 
 </mapper>

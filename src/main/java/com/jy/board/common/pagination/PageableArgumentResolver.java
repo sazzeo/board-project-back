@@ -42,8 +42,6 @@ public class PageableArgumentResolver implements HandlerMethodArgumentResolver {
                 .size(size)
                 .sort(sort)
                 .direction(direction).build();
-
-
         return pageable;
 
 

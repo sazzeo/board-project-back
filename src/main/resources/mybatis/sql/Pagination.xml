@@ -9,6 +9,6 @@
     </sql>
 
     <sql id="pagingFooter">
-        WHERE ROWNUM BETWEEN #{start} AND #{end};
+        WHERE ROWNUM BETWEEN #{start} AND #{end}
     </sql>
 </mapper>

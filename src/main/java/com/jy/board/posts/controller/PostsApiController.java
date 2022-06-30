@@ -35,12 +35,10 @@ public class PostsApiController {
 
     //게시글 목록 조회
     @GetMapping(URI_PREFIX+"/posts")
-    public ResponseEntity<Map<String , Object>> findPosts(@PageDefault Pageable pageable) {
-
-        System.out.println("페이지:::::::::::::>>" + pageable);
+    public ResponseEntity<Map<String , Object>> findPosts(@PageDefault() Pageable pageable, String s , String o) {
 
         Map<String,  Object> map = new HashMap<>();
-        map.put("posts" , postsService.selectPosts(pageable));
+        map.put("posts" , postsService.selectPosts(pageable, s, o));
         map.put("pageable" , pageable);
         return responseEntity.success(map, HttpStatus.OK);
 
@@ -70,7 +68,7 @@ public class PostsApiController {
     }
 
     @PutMapping(URI_PREFIX + "/posts/{postsSeq}")
-    public String updatePost(@PathVariable Long postsSeq , @RequestBody PostsDto postsDto) {
+    public String updatePost(@PathVariable Long postsSeq , @Valid  @RequestBody PostsDto postsDto) {
        postsService.updatePost(postsSeq , postsDto);
         return "ok";
     }
@@ -94,8 +92,7 @@ public class PostsApiController {
 
     //태그 이름으로 게시글 조회
     @GetMapping(URI_PREFIX + "/posts/tags/{tagName}")
-    public ResponseEntity<List<PostsDto>> findPostsByTagName(@PathVariable String tagName) {
-        Pageable pageable = new Pageable();
+    public ResponseEntity<List<PostsDto>> findPostsByTagName(@PathVariable String tagName , Pageable pageable) {
         Map<String,  Object> map = new HashMap<>();
         map.put("posts" , postsService.selectPostsByTagName(tagName , pageable));
         map.put("pageable" , pageable);
