@@ -27,7 +27,15 @@ public class PostsService {
         return res;
     }
 
-    //검색조건 있는 경우
+    /** 주석 메소드 만들때 달기
+     * 설명 :
+     * 작성일 : 2022. 07. 01.
+     * @author : jy.lim
+     * @param pageable
+     * @param s
+     * @param o
+     * @return
+     */
   @Transactional
     public List<PostsDto> selectPosts(Pageable pageable ,String s,String o) {
       List<PostsDto> res = null;
@@ -41,6 +49,12 @@ public class PostsService {
 
 
     //게시글 단건조회
+
+    /**
+     *
+     * @param postsSeq
+     * @return
+     */
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
         PostsDto postsDto = postsRepository.selectPost(postsSeq);
