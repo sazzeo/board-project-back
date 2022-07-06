@@ -27,6 +27,8 @@ public class PostsService {
         return res;
     }
 
+
+
     /** 주석 메소드 만들때 달기
      * 설명 :
      * 작성일 : 2022. 07. 01.
@@ -51,10 +53,13 @@ public class PostsService {
     //게시글 단건조회
 
     /**
-     *
-     * @param postsSeq
      * @return
      */
+    @Transactional
+    public PostsDto selectPostBySeq() {
+        return selectPostBySeq(null);
+    }
+
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
         PostsDto postsDto = postsRepository.selectPost(postsSeq);

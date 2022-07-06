@@ -2,16 +2,13 @@ package com.jy.board.posts.service;
 
 
 import com.jy.board.common.pagination.Pageable;
-import com.jy.board.common.pagination.PageableResponse;
 import com.jy.board.config.MybatisConfig;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.dao.TestRepository;
-import com.jy.board.posts.model.PostsDto;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 
 import java.util.ArrayList;

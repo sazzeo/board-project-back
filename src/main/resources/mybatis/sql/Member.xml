@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jy.board.member.dao.MemberRepository">
+
+    <insert id="insertMember" parameterType="memberDto">
+        INSERT INTO MEMBER(ID,
+                           PASSWORD,
+                           NAME,
+                           EMAIL,
+                           PHONE,
+                           POST_CODE,
+                           ADDR,
+                           DETAIL_ADDR)
+        VALUES (#{id},
+                #{password},
+                #{name},
+                #{email},
+                #{phone},
+                #{postCode},
+                #{addr},
+                #{detailAddr})
+    </insert>
+</mapper>

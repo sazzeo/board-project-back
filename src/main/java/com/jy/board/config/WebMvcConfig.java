@@ -28,11 +28,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .maxAge(3000);
     }
 
-    //Pageable주입
+//    Pageable주입
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(pageableArgumentResolver);
-
     }
 
 }

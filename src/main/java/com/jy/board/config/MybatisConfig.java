@@ -4,6 +4,7 @@ package com.jy.board.config;
 import com.jy.board.common.pagination.PaginationInterceptor;
 import com.jy.board.common.util.CamelMap;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.type.JdbcType;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 public class MybatisConfig {
-
 
     static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
@@ -35,8 +35,8 @@ public class MybatisConfig {
 
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setMapUnderscoreToCamelCase(true);
-        configuration.setCallSettersOnNulls(false);
-        configuration.setJdbcTypeForNull(null);
+        configuration.setCallSettersOnNulls(true);
+        configuration.setJdbcTypeForNull(JdbcType.NULL);
 
         sessionFactory.setConfiguration(configuration);
 
