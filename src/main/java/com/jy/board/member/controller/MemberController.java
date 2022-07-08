@@ -20,7 +20,7 @@ public class MemberController {
     //회원가입
     @PostMapping(URI_PREFIX + "/join")
     public String addMember(@RequestBody MemberDto memberDto) {
-        System.out.println(memberDto);
+        memberService.insertMember(memberDto);
         return "ok";
     }
 
