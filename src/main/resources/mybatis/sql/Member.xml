@@ -20,4 +20,12 @@
                 #{addr},
                 #{detailAddr})
     </insert>
+
+    <select id="selectMember" resultType="memberDto">
+        SELECT ID ,
+               PASSWORD,
+               NAME
+        FROM MEMBER
+        WHERE ID = #{id}
+    </select>
 </mapper>

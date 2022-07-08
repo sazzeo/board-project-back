@@ -4,6 +4,7 @@ import com.jy.board.common.util.CustomResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,12 @@ public class ExceptionAdvice {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Map<String , Object>> customException(MethodArgumentTypeMismatchException e) {
         return responseEntity.error( ExceptionCode.PATH_ERROR );
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String , Object>> customException(UsernameNotFoundException e) {
+        System.out.println(e.getMessage());
+        return responseEntity.error( e.getMessage() , HttpStatus.BAD_REQUEST );
     }
 
 }

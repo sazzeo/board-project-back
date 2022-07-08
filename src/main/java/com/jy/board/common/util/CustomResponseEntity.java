@@ -21,13 +21,12 @@ public class CustomResponseEntity<T> {
     }
 
     public ResponseEntity<Map<String, Object>> error(List<Object> message, HttpStatus status) {
-        Map<String , Object> map = new HashMap<>();
-        map.put("message" , message );
-        map.put("status" , status.value());
-        return new ResponseEntity<>(map , status);
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", message);
+        map.put("status", status.value());
+        return new ResponseEntity<>(map, status);
 
     }
-
 
     public ResponseEntity<Map<String, Object>> error(ExceptionCode exceptionCode) {
         Map<String , Object> map = new HashMap<>();

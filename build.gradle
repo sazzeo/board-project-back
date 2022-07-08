@@ -12,6 +12,7 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation('org.springframework.boot:spring-boot-starter-web')
@@ -31,6 +32,8 @@ dependencies {
     //마이바티스
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
 
+    //타임리프
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.1'
 
     //postgresql
     implementation(group: 'org.postgresql' , name:'postgresql' , version: '42.2.19')
