@@ -37,18 +37,14 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public MemberDto selectMember(MemberDto memberDto) {
+    public String selectMember(MemberDto memberDto) {
         MemberDto selectMember = memberRepository.selectMember(memberDto.getId());
-
 
         if (selectMember == null) throw new UsernameNotFoundException("아이디가 틀렸습니다.");
         if (passwordEncoder.matches(memberDto.getPassword(), selectMember.getPassword())) {
             //토큰 파싱
-            String newToken = tokenProvider.createToken(selectMember);
-            System.out.println("새토큰: " + newToken);
-            MemberDto tokenMember = JwtTokenProvider.getMember(newToken);
-            System.out.println("파싱한 토큰: " +  tokenMember);
-            return selectMember;
+            String token = tokenProvider.createToken(selectMember);
+            return token;
         } else {
             throw new UsernameNotFoundException("아이디 또는 비밀번호가 틀렸습니다.");
         }

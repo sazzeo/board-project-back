@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public enum PermitUrl {
 
     GET(addPrefix(UrlCode.BaseUrl , new String[]{"/login", "/join"})),
-    POST(addPrefix(UrlCode.AuthUrl , new String[]{"/login", "/join"})),
+    POST(addPrefix(UrlCode.AuthUrl , new String[]{"/login", "/join" , "/test"})),
     PUT(),
     DELETE(),
     ANY();
