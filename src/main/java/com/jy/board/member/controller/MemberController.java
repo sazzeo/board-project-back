@@ -4,7 +4,6 @@ package com.jy.board.member.controller;
 import com.jy.board.member.model.MemberDto;
 import com.jy.board.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
