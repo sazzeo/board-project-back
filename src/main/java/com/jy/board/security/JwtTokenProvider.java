@@ -10,9 +10,10 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtTokenProvider {
+    public class JwtTokenProvider {
 
-    private static final String JWT_SECRET = "secretKey";
+//        private static final String JWT_SECRET = "secretKey";
+    private static final String JWT_SECRET = "asdfasdfdsafadsfdsafdasf";
     // 토큰 유효시간
     private static final long JWT_EXPIRATION_MS = 60*60*1000L; //1시간으로 지정
 
@@ -50,10 +51,15 @@ public class JwtTokenProvider {
     }
 
     //토큰이 유효한지 아닌지 확인하기
-    public boolean validateToken(String token) {
-        Jws<Claims> claimsJws = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
-
-        return true;
+    public static boolean validateToken(String token) {
+        try {
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(token);
+            return true;
+        }catch (Exception e) {
+            System.out.println(e.getClass());
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 
 

@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -37,13 +38,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterBefore(customFilter() , UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST,PermitUrl.POST.getUrls()).permitAll()
+                .mvcMatchers(HttpMethod.POST , PermitUrl.POST.getUrls()).permitAll()
                 .antMatchers(PermitUrl.GET.getUrls()).permitAll() //
                 .anyRequest().authenticated() //나머지는 인증 필요함
+//                .anyRequest().permitAll()
                 .and()
-            //    .sessionManagement() //세션 끄기
-             //   .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            //    .and()
+                .sessionManagement() //세션 끄기
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .cors() //rest api 기반이므로 cors 켜기
                 .and()
                 .csrf()//rest api기반이므로 csrf도 끄기
