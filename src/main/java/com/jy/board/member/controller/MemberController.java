@@ -29,9 +29,9 @@ public class MemberController {
 
     //로그인
     @PostMapping(URI_PREFIX + "/login")
-    public String loginMember(@RequestBody MemberDto memberDto){
-        String token = memberService.selectMember(memberDto);
-        return token;
+    public MemberDto loginMember(@RequestBody MemberDto memberDto){
+        MemberDto authMember = memberService.selectMember(memberDto);
+        return authMember;
     }
 
     @PostMapping(URI_PREFIX + "/test")

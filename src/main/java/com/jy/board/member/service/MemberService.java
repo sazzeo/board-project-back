@@ -55,14 +55,15 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public String selectMember(MemberDto memberDto) {
+    public MemberDto selectMember(MemberDto memberDto) {
         MemberDto selectMember = memberRepository.selectMember(memberDto.getId());
 
         if (selectMember == null) throw new UsernameNotFoundException("존재하지 않는 사용자입니다.");
         if (passwordEncoder.matches(memberDto.getPassword(), selectMember.getPassword())) {
             //토큰 파싱
             String token = tokenProvider.createToken(selectMember);
-            return token;
+            selectMember.setAuthToken(token);
+            return selectMember;
         } else {
             throw new UsernameNotFoundException("아이디 또는 비밀번호가 틀렸습니다.");
         }

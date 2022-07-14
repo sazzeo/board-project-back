@@ -40,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(HttpMethod.POST , PermitUrl.POST.getUrls()).permitAll()
                 .antMatchers(PermitUrl.GET.getUrls()).permitAll() //
+                .antMatchers("/api/board/auth/**").permitAll()
                 .anyRequest().authenticated() //나머지는 인증 필요함
 //                .anyRequest().permitAll()
                 .and()

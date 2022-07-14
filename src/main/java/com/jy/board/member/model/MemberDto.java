@@ -28,4 +28,6 @@ public class MemberDto {
     private String detailAddr;
     private LocalDateTime regDate;
 
+    private String authToken;
+
 }
