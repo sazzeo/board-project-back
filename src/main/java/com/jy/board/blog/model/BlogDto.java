@@ -17,9 +17,9 @@ public class BlogDto {
     private String title;
     private String subTitle;
     private String url;
-    private String tagYn;
-    private String tagMin;
-    private String tagCardinal;
+    private Boolean tagYn;
+    private Integer tagMin;
+    private Integer tagCardinal;
     private Date regDate;
 
     @Builder

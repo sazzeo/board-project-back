@@ -9,7 +9,7 @@
         </selectKey>
     </insert>
 
-    <select id="selectProfileBoxInfo" resultType="camelMap">
+    <select id="selectProfileBoxInfo" resultType="map">
         SELECT MEMBER.ID,
                MEMBER.NAME,
                BLOG.TITLE,
@@ -19,4 +19,42 @@
                       USING (ID)
         WHERE BLOG.URL = #{url};
     </select>
+
+    <select id="selectProfile" resultType="memberBlogDto">
+        SELECT ID,
+               NAME,
+               EMAIL,
+               TITLE,
+               SUB_TITLE,
+               TAG_YN,
+               TAG_MIN,
+               TAG_CARDINAL
+        FROM MEMBER
+                 LEFT JOIN BLOG
+                           USING (ID)
+        WHERE ID = #{id}
+    </select>
+
+    <update id="updateBlog" parameterType="blogDto">
+        UPDATE BLOG
+        <set>
+            <if test="title !=null">
+                , TITLE = #{title}
+            </if>
+            <if test="subTitle !=null">
+                , SUB_TITLE = #{subTitle}
+            </if>
+            <if test="tagYn !=null">
+                , TAG_YN = #{tagYn}
+            </if>
+            <if test="tagMin !=null">
+                , TAG_MIN = #{tagMin}
+            </if>
+            <if test="tagCardinal !=null">
+                , TAG_CARDINAL = #{tagCardinal}
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+
 </mapper>

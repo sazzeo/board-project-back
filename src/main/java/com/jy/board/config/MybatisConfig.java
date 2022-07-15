@@ -43,6 +43,4 @@ public class MybatisConfig {
         return sessionFactory.getObject();
     }
 
-
-
 }

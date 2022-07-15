@@ -59,17 +59,14 @@ public class MemberService implements UserDetailsService {
         MemberDto selectMember = memberRepository.selectMember(memberDto.getId());
 
         if (selectMember == null) throw new UsernameNotFoundException("존재하지 않는 사용자입니다.");
-        if (passwordEncoder.matches(memberDto.getPassword(), selectMember.getPassword())) {
-            //토큰 파싱
-            String token = tokenProvider.createToken(selectMember);
-            selectMember.setAuthToken(token);
-            return selectMember;
-        } else {
+        if (!passwordEncoder.matches(memberDto.getPassword(), selectMember.getPassword())) {
             throw new UsernameNotFoundException("아이디 또는 비밀번호가 틀렸습니다.");
         }
-
+        //토큰 파싱
+        String token = tokenProvider.createToken(selectMember);
+        selectMember.setAuthToken(token);
+        return selectMember;
     }
-
 
     //얘가 알아서 처리해 주는 부분..??
     @Override
@@ -79,4 +76,14 @@ public class MemberService implements UserDetailsService {
         UserDetails userDetails = new User(username, selectMember.getPassword(), Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         return userDetails;
     }
+
+    @Transactional
+    public int updateMember(MemberDto memberDto) {
+
+        if(memberDto.getPassword() != null) {
+            memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword()));
+        }
+        return memberRepository.updateMember(memberDto);
+    }
+
 }

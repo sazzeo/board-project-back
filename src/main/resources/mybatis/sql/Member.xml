@@ -29,5 +29,17 @@
         WHERE ID = #{id}
     </select>
 
+    <update id="updateMember" parameterType="memberDto">
+        UPDATE MEMBER
+        <set>
+            <if test="name !=null">
+                , NAME = #{name}
+            </if>
+            <if test="password !=null">
+                , PASSWORD = #{password}
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
 
 </mapper>

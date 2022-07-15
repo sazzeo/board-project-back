@@ -30,4 +30,5 @@ public class CustomFilter extends OncePerRequestFilter {
         //UserDetails users = new CustomUser(m , password , Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         filterChain.doFilter(request , response);
     }
+
 }

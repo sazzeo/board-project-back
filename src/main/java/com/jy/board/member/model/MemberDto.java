@@ -23,9 +23,13 @@ public class MemberDto {
     private String email;
     @NotEmpty
     private String phone;
+
     private int postCode;
+
     private String addr;
+
     private String detailAddr;
+
     private LocalDateTime regDate;
 
     private String authToken;
