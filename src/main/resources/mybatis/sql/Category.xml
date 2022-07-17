@@ -10,4 +10,29 @@
             select currval('CATEGORY_SEQ')
         </selectKey>
     </insert>
+
+
+<!--    <resultMap type="map" id="categoryMap">-->
+<!--        <id property="categorySeq" column="CATEGORY_SEQ"/>-->
+<!--        <result property="blogSeq" column="BLOG_SEQ"/>-->
+<!--        <result property="title" column="TITLE"/>-->
+<!--        <result property="sort" column="SORT"/>-->
+<!--        <result property="totalCnt" column="TOTAL_CNT"/>-->
+<!--        <collection property=""  javaType="list">-->
+<!--            <id property="tagSeq" column="TAG_SEQ"/>-->
+<!--            <result property="tagName" column="TAG_NAME"/>-->
+<!--        </collection>-->
+<!--    </resultMap>-->
+
+    <select id="selectCategory" resultType="categoryDto">
+        SELECT CATEGORY_SEQ ,
+               BLOG_SEQ ,
+               TITLE ,
+               SORT ,
+               UP_CATEGORY ,
+               TOTAL_CNT
+        FROM CATEGORY
+        WHERE BLOG_SEQ = #{blogSeq}
+        ORDER BY UP_CATEGORY NULLS FIRST , SORT
+    </select>
 </mapper>

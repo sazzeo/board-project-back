@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -34,6 +36,19 @@ public class BlogService {
     @Transactional
     public int updateBlog(BlogDto blogDto) {
         return blogRepository.updateBlog(blogDto);
+    }
+
+    @Transactional
+    public CategoryDto selectCategory(Long blogSeq) {
+        List<CategoryDto> categories = categoryRepository.selectCategory(blogSeq);
+
+        categories.stream().filter(categoryDto -> categoryDto.getUpCategory() == null).map(CategoryDto->{
+            return new CategoryDto();
+        }).collect(Collectors.toList());
+
+        System.out.println(categories);
+
+        return null;
     }
 
 }

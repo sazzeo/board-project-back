@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -16,9 +17,14 @@ public class CategoryDto {
     private Long BlogSeq;
     private String title;
     private int sort;
-    private Long upCategory;
+
     private int totalCnt;
+
     private Date regDate;
+
+    private Long upCategory;
+
+    private List<CategoryDto> categoryDto;
 
     @Builder
     public CategoryDto(Long blogSeq, String title, int sort) {
