@@ -24,7 +24,7 @@ public class CategoryDto {
 
     private Long upCategory;
 
-    private List<CategoryDto> categoryDto;
+    private List<CategoryDto> children;
 
     @Builder
     public CategoryDto(Long blogSeq, String title, int sort) {

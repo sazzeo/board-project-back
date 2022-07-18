@@ -1,6 +1,7 @@
 package com.jy.board.blog.controller;
 
 import com.jy.board.blog.model.BlogDto;
+import com.jy.board.blog.model.CategoryDto;
 import com.jy.board.blog.model.MemberBlogDto;
 import com.jy.board.blog.service.BlogService;
 import com.jy.board.member.model.MemberDto;
@@ -8,6 +9,7 @@ import com.jy.board.security.UserToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -37,5 +39,9 @@ public class BlogController {
 
     }
 
+    @GetMapping(URI_PREFIX + "/category")
+    public List<CategoryDto> findCategories(@UserToken MemberDto memberDto) {
+        return blogService.selectCategories(memberDto.getId());
+    }
 
 }

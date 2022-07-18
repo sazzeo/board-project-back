@@ -18,7 +18,7 @@ public class BlogServiceTest {
     public void categoryTest() {
         Long blogSeq = 100007L;
 
-        List<CategoryDto> categoryDtoList = categoryRepository.selectCategory(blogSeq);
-        System.out.println(categoryDtoList);
+        //List<CategoryDto> categoryDtoList = categoryRepository.selectCategories(blogSeq);
+        //System.out.println(categoryDtoList);
     }
 }

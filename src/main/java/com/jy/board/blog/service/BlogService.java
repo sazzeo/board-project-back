@@ -39,16 +39,9 @@ public class BlogService {
     }
 
     @Transactional
-    public CategoryDto selectCategory(Long blogSeq) {
-        List<CategoryDto> categories = categoryRepository.selectCategory(blogSeq);
-
-        categories.stream().filter(categoryDto -> categoryDto.getUpCategory() == null).map(CategoryDto->{
-            return new CategoryDto();
-        }).collect(Collectors.toList());
-
-        System.out.println(categories);
-
-        return null;
+    public List<CategoryDto> selectCategories(String id) {
+        List<CategoryDto> categories = categoryRepository.selectCategories(id);
+        return categories;
     }
 
 }

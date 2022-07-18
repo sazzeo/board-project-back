@@ -10,6 +10,6 @@ public interface CategoryRepository {
 
     int insertCategory(CategoryDto categoryDto);
 
-    List<CategoryDto> selectCategory(Long blogSeq);
+    List<CategoryDto> selectCategories(String id);
 
 }

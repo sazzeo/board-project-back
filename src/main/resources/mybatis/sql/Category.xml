@@ -12,27 +12,48 @@
     </insert>
 
 
-<!--    <resultMap type="map" id="categoryMap">-->
-<!--        <id property="categorySeq" column="CATEGORY_SEQ"/>-->
-<!--        <result property="blogSeq" column="BLOG_SEQ"/>-->
-<!--        <result property="title" column="TITLE"/>-->
-<!--        <result property="sort" column="SORT"/>-->
-<!--        <result property="totalCnt" column="TOTAL_CNT"/>-->
-<!--        <collection property=""  javaType="list">-->
-<!--            <id property="tagSeq" column="TAG_SEQ"/>-->
-<!--            <result property="tagName" column="TAG_NAME"/>-->
-<!--        </collection>-->
-<!--    </resultMap>-->
+    <resultMap type="categoryDto" id="categoryMap" >
+        <id property="categorySeq" column="PARENT_CATEGORY_SEQ"/>
+        <result property="blogSeq" column="PARENT_BLOG_SEQ"/>
+        <result property="title" column="PARENT_TITLE"/>
+        <result property="sort" column="PARENT_SORT"/>
+        <result property="totalCnt" column="PARENT_TOTAL_CNT"/>
+        <result property="upCategory" column="PARENT_UP_CATEGORY"/>
+        <collection property="children"  javaType="list" ofType="categoryDto">
+            <id property="categorySeq" column="CHILDREN_CATEGORY_SEQ"/>
+            <result property="blogSeq" column="CHILDREN_BLOG_SEQ"/>
+            <result property="title" column="CHILDREN_TITLE"/>
+            <result property="sort" column="CHILDREN_SORT"/>
+            <result property="totalCnt" column="CHILDREN_TOTAL_CNT"/>
+            <result property="upCategory" column="CHILDREN_UP_CATEGORY"/>
+        </collection>
+    </resultMap>
 
-    <select id="selectCategory" resultType="categoryDto">
-        SELECT CATEGORY_SEQ ,
-               BLOG_SEQ ,
-               TITLE ,
-               SORT ,
-               UP_CATEGORY ,
-               TOTAL_CNT
-        FROM CATEGORY
-        WHERE BLOG_SEQ = #{blogSeq}
-        ORDER BY UP_CATEGORY NULLS FIRST , SORT
+    <select id="selectCategories" resultMap="categoryMap">
+        WITH CATEGORY AS (SELECT CATEGORY_SEQ,
+                                 BLOG_SEQ,
+                                 TITLE,
+                                 SORT,
+                                 UP_CATEGORY,
+                                 TOTAL_CNT
+                          FROM CATEGORY
+                          WHERE BLOG_SEQ = (SELECT BLOG_SEQ FROM BLOG WHERE ID = #{id}))
+        SELECT PARENT.CATEGORY_SEQ   PARENT_CATEGORY_SEQ,
+               PARENT.BLOG_SEQ       PARENT_BLOG_SEQ,
+               PARENT.TITLE          PARENT_TITLE,
+               PARENT.SORT           PARENT_SORT,
+               PARENT.UP_CATEGORY    PARENT_UP_CATEGORY,
+               PARENT.TOTAL_CNT      PARENT_TOTAL_CNT,
+               CHILDREN.CATEGORY_SEQ CHILDREN_CATEGORY_SEQ,
+               CHILDREN.BLOG_SEQ     CHILDREN_BLOG_SEQ,
+               CHILDREN.TITLE        CHILDREN_TITLE,
+               CHILDREN.SORT         CHILDREN_SORT,
+               CHILDREN.UP_CATEGORY  CHILDREN_UP_CATEGORY,
+               CHILDREN.TOTAL_CNT    CHILDREN_TITLE_CNT
+        FROM CATEGORY PARENT
+                 LEFT JOIN CATEGORY CHILDREN
+                           ON (PARENT.CATEGORY_SEQ = CHILDREN.UP_CATEGORY)
+        WHERE PARENT.UP_CATEGORY IS NULL
+        ORDER BY PARENT.SORT, CHILDREN.SORT
     </select>
 </mapper>
