@@ -1,9 +1,12 @@
 package com.jy.board.common.exception;
 
 import com.jy.board.common.util.CustomResponseEntity;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,5 +52,6 @@ public class ExceptionAdvice {
         System.out.println(e.getMessage());
         return responseEntity.error( e.getMessage() , HttpStatus.BAD_REQUEST );
     }
+
 
 }
