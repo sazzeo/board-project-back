@@ -42,4 +42,9 @@
         WHERE ID = #{id}
     </update>
 
+    <select id="selectMemberCount">
+        SELECT COUNT(ID)
+        FROM MEMBER
+        WHERE ID = #{id}
+    </select>
 </mapper>

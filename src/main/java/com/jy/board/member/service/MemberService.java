@@ -86,4 +86,9 @@ public class MemberService implements UserDetailsService {
         return memberRepository.updateMember(memberDto);
     }
 
+    //=>불값 전송...?? 없음 있음 data:null이면?
+    public int selectMemberCount(String id) {
+        return memberRepository.selectMemberCount(id);
+    }
+
 }

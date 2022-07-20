@@ -58,4 +58,11 @@ public class MemberController {
         return "ok";
     }
 
+    /*아이디 중복체크*/
+    @GetMapping(URI_PREFIX + "/auth/id-check")
+    public int findMemberExist(String id) {
+        return memberService.selectMemberCount(id);
+    }
+
+
 }

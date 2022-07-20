@@ -11,4 +11,6 @@ public interface MemberRepository {
     MemberDto selectMember(String id);
 
     int updateMember(MemberDto memberDto);
+
+    int selectMemberCount(String id);
 }
