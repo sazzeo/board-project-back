@@ -37,13 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .addFilterBefore(customFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(customFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, PermitUrl.POST.getUrls()).permitAll()
-                .antMatchers(PermitUrl.GET.getUrls()).permitAll() //
-                .antMatchers("/api/board/auth/**").permitAll()
+                //.mvcMatchers(HttpMethod.POST, PermitUrl.POST.getUrls()).permitAll()
+                //.antMatchers(PermitUrl.GET.getUrls()).permitAll() //
+                .antMatchers("/api/board/auth/**")//.permitAll()
+                .hasRole("ANONYMOUS")
                 .anyRequest().authenticated() //나머지는 인증 필요함
-//                .anyRequest().permitAll()
                 .and()
                 .sessionManagement() //세션 끄기
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .accessDeniedHandler(new JwtAuthenticationExceptionHandler())
                 .and()
-                .anonymous().disable()
+             //   .anonymous().disable()
                 .cors() //rest api 기반이므로 cors 켜기
                 .and()
                 .csrf()//rest api기반이므로 csrf도 끄기

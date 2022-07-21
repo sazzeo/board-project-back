@@ -39,9 +39,18 @@ public class BlogController {
 
     }
 
+    //카테고리 보기
     @GetMapping(URI_PREFIX + "/category")
     public List<CategoryDto> findCategories(@UserToken MemberDto memberDto) {
         return blogService.selectCategories(memberDto.getId());
+    }
+
+
+    //카테고리 추가 or 삭제
+    @PutMapping(URI_PREFIX + "/category")
+    public String updateCategories(@UserToken MemberDto memberDto , @RequestBody List<CategoryDto> categoryDto) {
+        blogService.updateCategories(memberDto , categoryDto);
+        return "ok";
     }
 
 }

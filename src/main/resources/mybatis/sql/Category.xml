@@ -4,28 +4,30 @@
 
 
     <insert id="insertCategory" parameterType="categoryDto">
-        INSERT INTO CATEGORY(BLOG_SEQ, TITLE, SORT, UP_CATEGORY )
-        VALUES (#{blogSeq}, #{title}, #{sort}, #{upCategory})
+        INSERT INTO CATEGORY(BLOG_SEQ, TITLE, SORT, UP_CATEGORY , publicYn)
+        VALUES (#{blogSeq}, #{title}, #{sort}, #{upCategory} , ${publicYn})
         <selectKey keyProperty="categorySeq" resultType="long" order="AFTER">
             select currval('CATEGORY_SEQ')
         </selectKey>
     </insert>
 
 
-    <resultMap type="categoryDto" id="categoryMap" >
+    <resultMap type="categoryDto" id="categoryMap">
         <id property="categorySeq" column="PARENT_CATEGORY_SEQ"/>
         <result property="blogSeq" column="PARENT_BLOG_SEQ"/>
         <result property="title" column="PARENT_TITLE"/>
         <result property="sort" column="PARENT_SORT"/>
         <result property="totalCnt" column="PARENT_TOTAL_CNT"/>
         <result property="upCategory" column="PARENT_UP_CATEGORY"/>
-        <collection property="children"  javaType="list" ofType="categoryDto">
+        <result property="publicYn" column="PARENT_PUBLIC_YN"/>
+        <collection property="children" javaType="list" ofType="categoryDto">
             <id property="categorySeq" column="CHILDREN_CATEGORY_SEQ"/>
             <result property="blogSeq" column="CHILDREN_BLOG_SEQ"/>
             <result property="title" column="CHILDREN_TITLE"/>
             <result property="sort" column="CHILDREN_SORT"/>
             <result property="totalCnt" column="CHILDREN_TOTAL_CNT"/>
             <result property="upCategory" column="CHILDREN_UP_CATEGORY"/>
+            <result property="publicYn" column="CHILDREN_PUBLIC_YN"/>
         </collection>
     </resultMap>
 
@@ -35,7 +37,8 @@
                                  TITLE,
                                  SORT,
                                  UP_CATEGORY,
-                                 TOTAL_CNT
+                                 TOTAL_CNT,
+                                 PUBLIC_YN
                           FROM CATEGORY
                           WHERE BLOG_SEQ = (SELECT BLOG_SEQ FROM BLOG WHERE ID = #{id}))
         SELECT PARENT.CATEGORY_SEQ   PARENT_CATEGORY_SEQ,
@@ -44,16 +47,42 @@
                PARENT.SORT           PARENT_SORT,
                PARENT.UP_CATEGORY    PARENT_UP_CATEGORY,
                PARENT.TOTAL_CNT      PARENT_TOTAL_CNT,
+               PARENT.PUBLIC_YN      PARENT_PUBLIC_YN,
                CHILDREN.CATEGORY_SEQ CHILDREN_CATEGORY_SEQ,
                CHILDREN.BLOG_SEQ     CHILDREN_BLOG_SEQ,
                CHILDREN.TITLE        CHILDREN_TITLE,
                CHILDREN.SORT         CHILDREN_SORT,
                CHILDREN.UP_CATEGORY  CHILDREN_UP_CATEGORY,
-               CHILDREN.TOTAL_CNT    CHILDREN_TITLE_CNT
+               CHILDREN.TOTAL_CNT    CHILDREN_TITLE_CNT,
+               CHILDREN.PUBLIC_YN    CHILDREN_PUBLIC_YN
         FROM CATEGORY PARENT
                  LEFT JOIN CATEGORY CHILDREN
                            ON (PARENT.CATEGORY_SEQ = CHILDREN.UP_CATEGORY)
         WHERE PARENT.UP_CATEGORY IS NULL
         ORDER BY PARENT.SORT, CHILDREN.SORT
     </select>
+
+    <select id="selectCategoriesForUpdate" resultType="categoryDto">
+        SELECT CATEGORY_SEQ ,
+               TITLE,
+               SORT ,
+               UP_CATEGORY ,
+               PUBLIC_YN
+        FROM CATEGORY
+        WHERE  BLOG_SEQ = (SELECT BLOG_SEQ FROM BLOG WHERE ID = #{id})
+        ORDER BY CATEGORY_SEQ
+    </select>
+
+    <update id="updateCategory" parameterType="categoryDto">
+        UPDATE CATEGORY
+        SET TITLE = #{title} ,
+        PUBLIC_YN = #{publicYn} ,
+        UP_CATEOGRY = #{upCategory}
+        WHERE CATEGORY_SEQ = #{cateogrySeq}
+    </update>
+
+    <delete id="deleteCategory" >
+        DELETE FROM CATEGORY
+        WHERE CATEGORY_SEQ = #{categorySeq}
+    </delete>
 </mapper>

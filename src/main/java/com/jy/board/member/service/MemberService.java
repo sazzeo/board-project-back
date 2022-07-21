@@ -50,6 +50,7 @@ public class MemberService implements UserDetailsService {
                 .blogSeq(blogDto.getBlogSeq())
                 .title("전체보기")
                 .sort(1)
+                .publicYn(true)
                 .build();
         categoryRepository.insertCategory(categoryDto);
     }

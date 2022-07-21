@@ -7,6 +7,7 @@ import org.apache.ibatis.type.Alias;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor
 @Data
@@ -26,10 +27,26 @@ public class CategoryDto {
 
     private List<CategoryDto> children;
 
+    private boolean publicYn;
+
     @Builder
-    public CategoryDto(Long blogSeq, String title, int sort) {
+    public CategoryDto(Long blogSeq, String title, int sort , boolean publicYn) {
         BlogSeq = blogSeq;
         this.title = title;
         this.sort = sort;
+        this.publicYn = publicYn;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CategoryDto)) return false;
+        CategoryDto that = (CategoryDto) o;
+        return getSort() == that.getSort()  && isPublicYn() == that.isPublicYn() && getCategorySeq().equals(that.getCategorySeq()) && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getUpCategory(), that.getUpCategory());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCategorySeq(), getTitle(), getSort(), getUpCategory(), isPublicYn());
     }
 }
