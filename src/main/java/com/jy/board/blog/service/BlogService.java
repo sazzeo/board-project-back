@@ -44,73 +44,60 @@ public class BlogService {
     }
 
     @Transactional
-    public int updateCategories(MemberDto memberDto, List<CategoryDto> newCategoryDto){
-        List<CategoryDto> oldCategoryDto = categoryRepository.selectCategoriesForUpdate(memberDto.getId());
+    public List<CategoryDto> selectCategoriesForInsertPosts(String id) {
+        return categoryRepository.selectCategoriesForInsertPosts(id);
+    }
 
-        System.out.println("새카테고리: " + newCategoryDto);
-        System.out.println("기존 카테고리: " + oldCategoryDto);
-        
+    @Transactional
+    public int updateCategories(MemberDto memberDto, List<CategoryDto> newCategoryList){
+        List<CategoryDto> oldCategoryList = categoryRepository.selectCategoriesForUpdate(memberDto.getId());
         List<Long> removeCategorySeqList = new ArrayList<>();
-        
-        //null인경우 일단 db에 데이터 추가하고 list 에서는 제외함 , 이후 CategorySeq로 정렬시킴
-        Iterator<CategoryDto> newCategoryIter = newCategoryDto.stream().filter(categoryDto -> {
+
+        //같은게 있는지 판단하는 로직 버블 정렬해서 바로 옆에있는애랑 같으면 같다고 판단?
+        //원소가 같은게 있는지 판단하는 로직=>set으로 만들어서 줄어들었으면 같은애로 판단
+
+
+        //null 인경우 일단 db에 데이터 추가하고 list 에서는 제외함 , 이후 CategorySeq로 정렬시킴
+        PriorityQueue<CategoryDto> newCategoryQueue = newCategoryList.stream().filter(categoryDto -> {
             boolean isNew = categoryDto.getCategorySeq() == null;
+            categoryDto.setBlogSeq(oldCategoryList.get(0).getBlogSeq()); //oldCategoryList는 반드시 1개이상있어야 함.
             if(isNew) {
-                System.out.println("추가로직 넣을곳 : " + categoryDto.getTitle());
-            }
-            return !isNew; //추가후 제거 
-        }).sorted(Comparator.comparing(CategoryDto::getCategorySeq)).iterator();
-
-        //새 카테고리는 2차원 구조로, 원래 카테고리는 1차원 구조로 되어있음
-        //정렬이 보장 되어야 함.
-
-        for (CategoryDto oldCategory : oldCategoryDto) {
-            if(newCategoryIter.hasNext()) {
-                CategoryDto newCategory = newCategoryIter.next();
-                Long oldCategorySeq = oldCategory.getCategorySeq();
-                Long newCategorySeq = newCategory.getCategorySeq();
-
-                //만약 둘이 같은 경우?
-                if(oldCategorySeq.equals(newCategorySeq)) {
-                    if(!oldCategory.equals(newCategory)) {
-                        System.out.println("둘이 다름!");
+                if(categoryDto.getChildren()==null || categoryDto.getChildren().size()==0) {
+                    categoryRepository.insertCategory(categoryDto);
+                }else {
+                    categoryRepository.insertCategory(categoryDto);
+                    Long upCategorySeq = categoryDto.getCategorySeq();
+                    for(CategoryDto child :categoryDto.getChildren()) {
+                        child.setUpCategory(upCategorySeq);
+                        categoryRepository.insertCategory(categoryDto);
                     }
                 }
-                //만약 둘이 다른 경우? => new쪽에서 지워진 것
-                else {
-                    removeCategorySeqList.add(oldCategorySeq);
-                }
             }
+            return !isNew; //추가후 리스트에서 제거 후 우선순위 큐로 만듦.
+        }).collect(Collectors.toCollection(()-> new PriorityQueue<>(Comparator.comparing(CategoryDto::getCategorySeq))));
 
+        for(CategoryDto oldCategory : oldCategoryList) {
+            CategoryDto newCategory = newCategoryQueue.peek();
+            Long oldCategorySeq = oldCategory.getCategorySeq();
+            if(newCategory == null) {
+                removeCategorySeqList.add(oldCategorySeq);
+                continue;
+            }
+            Long newCategorySeq = newCategory.getCategorySeq();
+
+            //만약 두개의 시퀀스가 같은경우
+            if(oldCategorySeq.equals(newCategorySeq)) {
+                if(!newCategory.equals(oldCategory)){ //두 객체가 완전 같은 객체인지 판단한다. 같지 않을 경우 update
+                    categoryRepository.updateCategory(newCategory);
+                }
+                newCategoryQueue.poll();
+            }else { //같지 않을 경우 remove 로 간주한다.
+                removeCategorySeqList.add(oldCategorySeq);
+            }
         }
-
-      //  System.out.println(newCategoryDto);
-        //정렬 시키기
-        //근데 만약에 부모랑 자식을 같이 추가하면? 이게 또 문제임
-//        Iterator<CategoryDto> newCategoryIter = oldCategoryDto.iterator();
-//        int index = 0;
-//        //없는 애 찾기
-//        for(CategoryDto oldCategory:oldCategoryDto) {
-//            //만약 new가 있는경우
-//            if(newCategoryIter.hasNext()) {
-//
-//
-//            }else {
-//
-//            }
-//
-//            Long newCategorySeq = newCategoryIter.next().getCategorySeq();
-//            //만약 둘이 같으면
-//            if(oldCategory.getCategorySeq().equals(newCategorySeq)) continue;
-//            else()
-//        }
-
-        //없는애 => remove
-        //새로 생긴애 => insert
-        //기존애 => 달라졌으면 update
-
-
-        System.out.println("정렬후:" + newCategoryDto);
+        if(removeCategorySeqList.size() >0 ){
+            categoryRepository.deleteCategory(removeCategorySeqList);
+        }
 
         return 1;
     }

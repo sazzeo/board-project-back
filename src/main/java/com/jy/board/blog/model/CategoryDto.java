@@ -45,6 +45,8 @@ public class CategoryDto {
         return getSort() == that.getSort()  && isPublicYn() == that.isPublicYn() && getCategorySeq().equals(that.getCategorySeq()) && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getUpCategory(), that.getUpCategory());
     }
 
+
+
     @Override
     public int hashCode() {
         return Objects.hash(getCategorySeq(), getTitle(), getSort(), getUpCategory(), isPublicYn());

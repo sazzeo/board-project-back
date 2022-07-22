@@ -4,9 +4,11 @@ package com.jy.board.posts.controller;
 import com.jy.board.common.pagination.PageDefault;
 import com.jy.board.common.pagination.Pageable;
 import com.jy.board.common.util.CustomResponseEntity;
+import com.jy.board.member.model.MemberDto;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import com.jy.board.posts.service.PostsService;
+import com.jy.board.security.UserToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,14 +22,13 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-public class PostsApiController {
+public class PostsController {
 
     private final String URI_PREFIX = "/api/board";
 
     private final PostsService postsService;
 
-    @Autowired
-    private CustomResponseEntity customResponseEntity;
+    private final CustomResponseEntity customResponseEntity;
 
     //게시글 목록 조회
     @GetMapping(URI_PREFIX+"/posts")
@@ -58,8 +59,8 @@ public class PostsApiController {
 
     //게시글 등록
     @PostMapping(URI_PREFIX+"/posts")
-    public String addPosts(@Valid @RequestBody PostsDto postsDto) {
-        postsService.insertPost(postsDto);
+    public String addPosts( @UserToken MemberDto memberDto, @RequestBody PostsDto postsDto) {
+        postsService.insertPost(memberDto , postsDto );
         return "ok";
     }
 

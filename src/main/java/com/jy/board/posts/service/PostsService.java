@@ -3,6 +3,7 @@ package com.jy.board.posts.service;
 import com.jy.board.common.exception.CustomException;
 import com.jy.board.common.exception.ExceptionCode;
 import com.jy.board.common.pagination.Pageable;
+import com.jy.board.member.model.MemberDto;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
@@ -71,8 +72,9 @@ public class PostsService {
 
 
     @Transactional
-    public void insertPost(PostsDto postsDto) {
+    public void insertPost(MemberDto memberDto , PostsDto postsDto  ) {
 
+        postsDto.setId(memberDto.getId());
         postsRepository.insertPost(postsDto);
 
         for (TagsDto dto : postsDto.getTagList()) {

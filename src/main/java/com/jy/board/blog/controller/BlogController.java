@@ -39,10 +39,22 @@ public class BlogController {
 
     }
 
-    //카테고리 보기
+    //카테고리 보기(수정용)
     @GetMapping(URI_PREFIX + "/category")
     public List<CategoryDto> findCategories(@UserToken MemberDto memberDto) {
         return blogService.selectCategories(memberDto.getId());
+    }
+
+
+    //카테고리 box보기
+    @GetMapping(URI_PREFIX + "/auth/{url}/category")
+    public List<CategoryDto> findCategories(@PathVariable String url) {
+        return blogService.selectCategories(url);
+    }
+
+    @GetMapping(URI_PREFIX + "/category/select-box")
+    public List<CategoryDto> findCategoryForSelectBox(@UserToken MemberDto memberDto) {
+        return blogService.selectCategoriesForInsertPosts(memberDto.getId());
     }
 
 

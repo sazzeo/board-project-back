@@ -4,10 +4,10 @@
 
 
     <insert id="insertCategory" parameterType="categoryDto">
-        INSERT INTO CATEGORY(BLOG_SEQ, TITLE, SORT, UP_CATEGORY , publicYn)
+        INSERT INTO CATEGORY(BLOG_SEQ, TITLE, SORT, UP_CATEGORY , PUBLIC_YN)
         VALUES (#{blogSeq}, #{title}, #{sort}, #{upCategory} , ${publicYn})
         <selectKey keyProperty="categorySeq" resultType="long" order="AFTER">
-            select currval('CATEGORY_SEQ')
+            SELECT CURRVAL('CATEGORY_SEQ')
         </selectKey>
     </insert>
 
@@ -64,6 +64,7 @@
 
     <select id="selectCategoriesForUpdate" resultType="categoryDto">
         SELECT CATEGORY_SEQ ,
+                BLOG_SEQ,
                TITLE,
                SORT ,
                UP_CATEGORY ,
@@ -73,16 +74,36 @@
         ORDER BY CATEGORY_SEQ
     </select>
 
+    <select id="selectCategoriesForInsertPosts" resultType="categoryDto">
+        SELECT RANK() OVER(PARTITION BY UP_CATEGORY ORDER BY SORT) ,
+                CATEGORY.*
+        FROM (
+                 SELECT CATEGORY_SEQ,
+                        TITLE,
+                        CASE
+                            WHEN UP_CATEGORY IS NULL THEN 0
+                            ELSE SORT END                            SORT,
+                        COALESCE(UP_CATEGORY, CATEGORY.CATEGORY_SEQ) UP_CATEGORY
+                 FROM CATEGORY
+                 WHERE BLOG_SEQ = (select blog_seq from blog where id = #{id})) CATEGORY
+    </select>
+
     <update id="updateCategory" parameterType="categoryDto">
         UPDATE CATEGORY
         SET TITLE = #{title} ,
         PUBLIC_YN = #{publicYn} ,
-        UP_CATEOGRY = #{upCategory}
-        WHERE CATEGORY_SEQ = #{cateogrySeq}
+        UP_CATEGORY = #{upCategory} ,
+        SORT = #{sort}
+        WHERE CATEGORY_SEQ = #{categorySeq}
     </update>
 
     <delete id="deleteCategory" >
         DELETE FROM CATEGORY
-        WHERE CATEGORY_SEQ = #{categorySeq}
+        WHERE CATEGORY_SEQ in
+        <foreach collection="list" item="categorySeq" index="index" separator="," open="(" close=")">
+            #{categorySeq}
+        </foreach>
     </delete>
+
+
 </mapper>

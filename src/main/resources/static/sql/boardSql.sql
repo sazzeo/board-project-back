@@ -4,6 +4,7 @@ SEARCH_PATH TO BOARD_PROJECT;
 ------시퀀스 모음----------------------------------------------------------
 CREATE SEQUENCE BLOG_SEQ MINVALUE 100001;
 CREATE SEQUENCE CATEGORY_SEQ MINVALUE 100001;
+CREATE SEQUENCE POST_SEQ MINVALUE 100001;
 
 
 ---멤버테이블---------------------------------------------------
@@ -63,3 +64,15 @@ CREATE TABLE CATEGORY
 -------------------------------------------------------------
 ---카테고리 테이블---------------------------------------------------
 
+
+
+CREATE TABLE POST (
+                      POST_SEQ	BIGINT	 DEFAULT NEXTVAL('POST_SEQ') 	PRIMARY KEY,
+                      CATEGORY_SEQ	BIGINT		NOT NULL,
+                      ID	VARCHAR(20)		NULL,
+                      TITLE	VARCHAR(30)		NULL,
+                      CONTENT	TEXT		NULL,
+                      VIEWS	INTEGER		NULL,
+                      LIKE_CNT	INTEGER		NULL,
+                      REG_DATE	DATE		NULL
+);

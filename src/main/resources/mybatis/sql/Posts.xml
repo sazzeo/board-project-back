@@ -12,8 +12,8 @@
     </select>
 
     <insert id="insertPost" parameterType="postsDto">
-        INSERT INTO POSTS(TITLE, CONTENT , MEMBER)
-        VALUES(#{title} , #{content} , #{member})
+        INSERT INTO POSTS(CATEGORY_SEQ , TITLE, CONTENT , ID)
+        VALUES(#{categorySeq} , #{title} , #{content} , #{id})
         <selectKey keyProperty="postsSeq" resultType="long" order="AFTER">
             select currval('POSTS_SEQ')
         </selectKey>

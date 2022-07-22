@@ -13,9 +13,11 @@ public interface CategoryRepository {
     List<CategoryDto> selectCategories(String id);
 
     List<CategoryDto> selectCategoriesForUpdate(String id);
+
+    List<CategoryDto> selectCategoriesForInsertPosts(String id);
     int updateCategory(CategoryDto categoryDto) ;
 
-    int deleteCategory(Long categorySeq);
+    int deleteCategory(List<Long> categorySeq);
 
 
 

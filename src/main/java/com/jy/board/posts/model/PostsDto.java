@@ -15,23 +15,24 @@ import java.util.List;
 public class PostsDto {
 
     private Long postsSeq;
+    private Long categorySeq;
     @NotEmpty
     private String title;
 
     @NotEmpty
     private String content;
-    private String member;
-    private Date regDate;
+    private String id;
     private int views;
-
+    private int likeCnt;
     private List<TagsDto> tagList;
+    private Date regDate;
 
 
     @Builder
-    public PostsDto(String title, String content, String member) {
+    public PostsDto(String title, String content, String id) {
         this.title = title;
         this.content = content;
-        this.member = member;
+        this.id = id;
     }
 
 }
