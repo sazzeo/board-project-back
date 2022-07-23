@@ -19,7 +19,6 @@ public class BlogController {
     private final BlogService blogService;
     private final String URI_PREFIX = "/api/board";
 
-
     //블로그 box정보
     @GetMapping(URI_PREFIX + "/auth/{url}/blog-profile")
     public Map<String, Object> findProfileBoxInfo(@PathVariable String url) {
@@ -52,6 +51,8 @@ public class BlogController {
         return blogService.selectCategories(url);
     }
 
+
+    //글 작성할 때 select Box용 카테고리
     @GetMapping(URI_PREFIX + "/category/select-box")
     public List<CategoryDto> findCategoryForSelectBox(@UserToken MemberDto memberDto) {
         return blogService.selectCategoriesForInsertPosts(memberDto.getId());

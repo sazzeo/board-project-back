@@ -72,15 +72,15 @@ public class PostsService {
 
 
     @Transactional
-    public void insertPost(MemberDto memberDto , PostsDto postsDto  ) {
+    public void insertPost(MemberDto memberDto , PostsDto postsDto ) {
 
         postsDto.setId(memberDto.getId());
         postsRepository.insertPost(postsDto);
 
-        for (TagsDto dto : postsDto.getTagList()) {
-            dto.setPostsSeq(postsDto.getPostsSeq());
-            postsRepository.insertTag(dto);
-        }
+//        for (TagsDto dto : postsDto.getTagList()) {
+//            dto.setPostsSeq(postsDto.getPostsSeq());
+//            postsRepository.insertTag(dto);
+//        }
 
     }
 

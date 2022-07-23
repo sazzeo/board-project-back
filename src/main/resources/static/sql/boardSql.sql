@@ -66,13 +66,13 @@ CREATE TABLE CATEGORY
 
 
 
-CREATE TABLE POST (
-                      POST_SEQ	BIGINT	 DEFAULT NEXTVAL('POST_SEQ') 	PRIMARY KEY,
-                      CATEGORY_SEQ	BIGINT		NOT NULL,
-                      ID	VARCHAR(20)		NULL,
-                      TITLE	VARCHAR(30)		NULL,
-                      CONTENT	TEXT		NULL,
-                      VIEWS	INTEGER		NULL,
-                      LIKE_CNT	INTEGER		NULL,
-                      REG_DATE	DATE		NULL
+CREATE TABLE POSTS (
+                       POST_SEQ	BIGINT	 DEFAULT NEXTVAL('POSTS_SEQ') 	PRIMARY KEY,
+                       CATEGORY_SEQ	BIGINT		NOT NULL,
+                       ID	VARCHAR(20)		NULL,
+                       TITLE	VARCHAR(30)		NULL,
+                       CONTENT	TEXT		NULL,
+                       VIEWS	INTEGER	DEFAULT 0	NULL,
+                       LIKE_CNT	INTEGER	DEFAULT 0	NULL,
+                       REG_DATE	DATE	DEFAULT NOW()	NULL
 );
