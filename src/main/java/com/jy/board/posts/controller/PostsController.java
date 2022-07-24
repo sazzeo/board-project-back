@@ -41,6 +41,19 @@ public class PostsController {
 
     }
 
+    //카테고리별 게시글 조회(공개글만 조회)
+    @GetMapping({URI_PREFIX+"/auth/posts/{url}/{parentCategory}" ,
+            URI_PREFIX+"/auth/posts/{url}/{parentCategory}/{childCategory}"})
+    public List<PostsDto> findPosts(@PathVariable String url , @PathVariable String parentCategory
+    , @PathVariable(required = false) String childCategory) {
+        System.out.println(url);
+        System.out.println(parentCategory);
+        System.out.println(childCategory);
+        List<PostsDto> posts = postsService.selectPosts(url , parentCategory , childCategory);
+        return null;
+    }
+
+
     //게시글 단건 조회
     @GetMapping(URI_PREFIX + "/posts/{postsSeq}")
     public PostsDto findPost(@PathVariable Long postsSeq) {
@@ -95,6 +108,8 @@ public class PostsController {
         map.put("pageable" , pageable);
         return customResponseEntity.success(map, HttpStatus.OK);
     }
+
+
 
 
 }

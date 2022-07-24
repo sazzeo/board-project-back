@@ -48,7 +48,7 @@ public class MemberService implements UserDetailsService {
 
         CategoryDto categoryDto = CategoryDto.builder()
                 .blogSeq(blogDto.getBlogSeq())
-                .title("전체보기")
+                .title("게시판")
                 .sort(1)
                 .publicYn(true)
                 .build();

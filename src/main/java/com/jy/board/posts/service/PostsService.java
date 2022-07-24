@@ -29,6 +29,14 @@ public class PostsService {
     }
 
 
+    //카테고리별 글 선택기능
+    @Transactional
+    public List<PostsDto> selectPosts(String url , String parentCategory , String childCategroy) {
+
+        return null;
+    }
+
+
 
     /** 주석 메소드 만들때 달기
      * 설명 :
