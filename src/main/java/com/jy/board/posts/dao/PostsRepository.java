@@ -14,6 +14,10 @@ public interface PostsRepository {
     
     //전체 posts 조회
     List<PostsDto> selectPosts(Pageable pageable);
+
+    List<PostsDto> selectPostsOfChildCategory(@Param("id") String id , @Param("title") String title);
+    List<PostsDto> selectPostsOfParentCategory(@Param("id") String id , @Param("title") String title);
+
     List<PostsDto> selectPostsAsOption(@Param("pageable") Pageable pageable ,@Param("s") String s , @Param("o") String o );
 
     int insertPost(PostsDto postsDto);

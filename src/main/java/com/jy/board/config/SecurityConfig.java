@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //.mvcMatchers(HttpMethod.POST, PermitUrl.POST.getUrls()).permitAll()
                 //.antMatchers(PermitUrl.GET.getUrls()).permitAll() //
                 .antMatchers("/api/board/auth/**")//.permitAll()
-                .hasRole("ANONYMOUS")
+                .hasAnyRole("ANONYMOUS","USER")
                 .anyRequest().authenticated() //나머지는 인증 필요함
                 .and()
                 .sessionManagement() //세션 끄기

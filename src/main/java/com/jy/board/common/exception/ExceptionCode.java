@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 public enum ExceptionCode {
 
 
-    PATH_ERROR("존재하지 않는 페이지입니다."  ,HttpStatus.BAD_REQUEST) ;
+    PATH_ERROR("존재하지 않는 페이지입니다."  ,HttpStatus.BAD_REQUEST),
+    FORBIDDEN("삭제 권한이 없습니다." , HttpStatus.FORBIDDEN);
 
     private String message;
     private String redirectPath;

@@ -28,15 +28,6 @@ public class PostsTest {
 
     }
 
-    @Test
-    public void insertTest() {
-        PostsDto postsDto = PostsDto.builder()
-                .title("제목")
-                .content("내용")
-                .member("작성자")
-                .build();
-
-    }
 
     @Test
     public void serviceTest() {

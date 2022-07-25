@@ -20,7 +20,6 @@ public class JwtAuthenticationExceptionHandler implements AccessDeniedHandler {
 
 
         System.out.println(exception);
-        System.out.println("잡힘");
 
     }
 

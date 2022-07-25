@@ -51,7 +51,7 @@ public class PaginationInterceptor  implements Interceptor {
              pageable = (Pageable) param;
          }else if(param.getClass().equals(MapperMethod.ParamMap.class)) {
             MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap)param;
-             pageable = (Pageable) paramMap.get("pageable");
+           //  pageable = (Pageable) paramMap.get("pageable");
         }else {
 
             return result;

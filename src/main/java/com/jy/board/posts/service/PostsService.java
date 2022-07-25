@@ -8,6 +8,7 @@ import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,11 +30,14 @@ public class PostsService {
     }
 
 
+
     //카테고리별 글 선택기능
     @Transactional
-    public List<PostsDto> selectPosts(String url , String parentCategory , String childCategroy) {
-
-        return null;
+    public List<PostsDto> selectPosts(String url , String parentCategory , String childCategory) {
+        if(childCategory == null) {
+            return postsRepository.selectPostsOfParentCategory(url , parentCategory);
+        }
+        return postsRepository.selectPostsOfChildCategory(url , childCategory);
     }
 
 
@@ -83,7 +87,10 @@ public class PostsService {
     public void insertPost(MemberDto memberDto , PostsDto postsDto ) {
 
         postsDto.setId(memberDto.getId());
-        postsRepository.insertPost(postsDto);
+        System.out.println(postsDto);
+
+        //postsRepository.insertPost(postsDto);
+
 
 //        for (TagsDto dto : postsDto.getTagList()) {
 //            dto.setPostsSeq(postsDto.getPostsSeq());
@@ -141,7 +148,10 @@ public class PostsService {
     }
 
 
-    public void deletePosts(Long postsSeq) {
+    public void deletePosts(Long postsSeq , MemberDto memberDto) {
+        PostsDto postsDto = postsRepository.selectPost(postsSeq);
+        if(postsDto == null) throw new CustomException(ExceptionCode.PATH_ERROR);
+        if(!memberDto.getId().equals(postsDto.getId())) throw new CustomException(ExceptionCode.FORBIDDEN);
         postsRepository.deleteTagsByPostsSeq(postsSeq);
         postsRepository.deletePostsBySeq(postsSeq);
     }

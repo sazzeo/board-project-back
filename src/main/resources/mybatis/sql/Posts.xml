@@ -11,6 +11,33 @@
                            USING (POSTS_SEQ)
     </select>
 
+    <select id="selectPostsOfChildCategory" resultMap="postsAndTags" resultType="postsDto">
+        SELECT *
+        FROM POSTS
+        WHERE ID = #{id}
+          AND CATEGORY_SEQ = (SELECT CATEGORY_SEQ FROM CATEGORY WHERE TITLE = #{title})
+        ORDER BY POSTS_SEQ DESC
+    </select>
+
+    <select id="selectPostsOfParentCategory" resultMap="postsAndTags" resultType="postsDto">
+        WITH CATE AS
+                 (SELECT *
+                  FROM CATEGORY
+                  WHERE BLOG_SEQ = (SELECT BLOG_SEQ FROM BLOG WHERE ID = #{id})),
+             JOIN_CATE AS
+                 (SELECT PARENT.CATEGORY_SEQ PARENT_SEQ, CHILD.CATEGORY_SEQ CHILD_SEQ
+                  FROM CATE PARENT
+                           LEFT JOIN CATE CHILD
+                                     ON (CHILD.UP_CATEGORY = PARENT.CATEGORY_SEQ)
+                  WHERE PARENT.TITLE = #{title})
+        SELECT *
+        FROM POSTS
+        WHERE CATEGORY_SEQ IN (SELECT PARENT_SEQ FROM JOIN_CATE)
+           OR CATEGORY_SEQ IN (SELECT CHILD_SEQ FROM JOIN_CATE)
+        ORDER BY POSTS_SEQ DESC
+    </select>
+
+
     <insert id="insertPost" parameterType="postsDto">
         INSERT INTO POSTS(CATEGORY_SEQ , TITLE, CONTENT , ID)
         VALUES(#{categorySeq} , #{title} , #{content} , #{id})
@@ -59,7 +86,7 @@
         <id property="postsSeq" column="POSTS_SEQ"/>
         <result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
-        <result property="member" column="MEMBER"/>
+        <result property="id" column="ID"/>
         <result property="regDate" column="REG_DATE"/>
         <result property="views" column="VIEWS"/>
         <result property="count" column="COUNT"/>
@@ -74,7 +101,7 @@
         <id property="postsSeq" column="POSTS_SEQ"/>
         <result property="title" column="TITLE"/>
         <result property="content" column="CONTENT"/>
-        <result property="member" column="MEMBER"/>
+        <result property="id" column="ID"/>
         <result property="regDate" column="REG_DATE"/>
         <result property="views" column="VIEWS"/>
         <!--        <result property="count" column="COUNT"/>-->
@@ -86,7 +113,10 @@
 
 
     <sql id="postsColumn">
-        POSTS.POSTS_SEQ,
+        POSTS
+        .
+        POSTS_SEQ
+        ,
         POSTS.TITLE ,
         SUBSTR(POSTS.CONTENT , 1, 80) AS CONTENT,
         POSTS.MEMBER ,
@@ -127,7 +157,7 @@
                 and MEMBER LIKE '%' || #{s} || '%'
             </if>
             <if test="o == '태그' or o=='전체' ">
-                and  POSTS_SEQ IN (
+                and POSTS_SEQ IN (
                 SELECT POSTS_SEQ FROM tags
                 WHERE TAG_NAME LIKE #{s}
                 )

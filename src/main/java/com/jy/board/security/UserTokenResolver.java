@@ -23,6 +23,10 @@ public class UserTokenResolver implements HandlerMethodArgumentResolver {
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+
+        if(SecurityContextHolder.getContext().getAuthentication().getPrincipal().getClass() != MemberDto.class){
+            return null;
+        };
         MemberDto memberDto = (MemberDto)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return memberDto;
     }

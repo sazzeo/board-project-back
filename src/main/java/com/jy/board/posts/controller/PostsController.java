@@ -46,21 +46,17 @@ public class PostsController {
             URI_PREFIX+"/auth/posts/{url}/{parentCategory}/{childCategory}"})
     public List<PostsDto> findPosts(@PathVariable String url , @PathVariable String parentCategory
     , @PathVariable(required = false) String childCategory) {
-        System.out.println(url);
-        System.out.println(parentCategory);
-        System.out.println(childCategory);
         List<PostsDto> posts = postsService.selectPosts(url , parentCategory , childCategory);
-        return null;
+        return posts;
     }
 
 
-    //게시글 단건 조회
-    @GetMapping(URI_PREFIX + "/posts/{postsSeq}")
-    public PostsDto findPost(@PathVariable Long postsSeq) {
-
+    //게시글 단건 조회 -로그인 안된 버전
+    @GetMapping(URI_PREFIX + "/auth/posts/{postsSeq}")
+    public PostsDto findPost(@PathVariable Long postsSeq , @UserToken MemberDto memberDto) {
         return postsService.selectPostBySeq(postsSeq);
-    }
 
+    }
 
     //tags 목록조회
     @GetMapping(URI_PREFIX + "/tags/{postsSeq}")
@@ -72,8 +68,8 @@ public class PostsController {
 
     //게시글 등록
     @PostMapping(URI_PREFIX+"/posts")
-    public String addPosts( @UserToken MemberDto memberDto, @RequestBody PostsDto postsDto) {
-        postsService.insertPost(memberDto , postsDto );
+    public String addPosts( @UserToken MemberDto memberDto, @RequestBody PostsDto posts ) {
+        postsService.insertPost(memberDto , posts);
         return "ok";
     }
 
@@ -86,8 +82,8 @@ public class PostsController {
     
     //게시글 삭제
     @DeleteMapping(URI_PREFIX + "/posts/{postsSeq}")
-    public String removePost(@PathVariable Long postsSeq) {
-        postsService.deletePosts(postsSeq);
+    public String removePost(@PathVariable Long postsSeq , @UserToken MemberDto memberDto) {
+        postsService.deletePosts(postsSeq , memberDto);
         return "ok";
     }
 
