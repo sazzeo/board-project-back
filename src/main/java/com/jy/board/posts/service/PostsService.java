@@ -1,8 +1,13 @@
 package com.jy.board.posts.service;
 
+import com.jy.board.blog.dao.BlogRepository;
+import com.jy.board.blog.dao.CategoryRepository;
+import com.jy.board.blog.model.BlogDto;
+import com.jy.board.blog.model.MemberBlogDto;
 import com.jy.board.common.exception.CustomException;
 import com.jy.board.common.exception.ExceptionCode;
 import com.jy.board.common.pagination.Pageable;
+import com.jy.board.member.dao.MemberRepository;
 import com.jy.board.member.model.MemberDto;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
@@ -21,6 +26,10 @@ public class PostsService {
 
     private final PostsRepository postsRepository;
 
+    private final BlogRepository blogRepository;
+
+    private final CategoryRepository categoryRepository;
+
 
     //게시글 리스트 조회
     @Transactional
@@ -34,6 +43,9 @@ public class PostsService {
     //카테고리별 글 선택기능
     @Transactional
     public List<PostsDto> selectPosts(String url , String parentCategory , String childCategory) {
+        if(parentCategory == null) { //전체보기로 검색하기
+            return postsRepository.selectAllPost(url);
+        }
         if(childCategory == null) {
             return postsRepository.selectPostsOfParentCategory(url , parentCategory);
         }
@@ -83,20 +95,18 @@ public class PostsService {
     }
 
 
+
+
     @Transactional
     public void insertPost(MemberDto memberDto , PostsDto postsDto ) {
 
         postsDto.setId(memberDto.getId());
-        System.out.println(postsDto);
-
-        //postsRepository.insertPost(postsDto);
-
-
-//        for (TagsDto dto : postsDto.getTagList()) {
-//            dto.setPostsSeq(postsDto.getPostsSeq());
-//            postsRepository.insertTag(dto);
-//        }
-
+        postsRepository.insertPost(postsDto);
+        for (TagsDto dto : postsDto.getTagList()) {
+            dto.setPostsSeq(postsDto.getPostsSeq());
+            postsRepository.insertTag(dto);
+        }
+       // categoryRepository.updateCategoryTotalCnt(postsDto.getCategorySeq());
     }
 
     @Transactional
@@ -136,9 +146,21 @@ public class PostsService {
     }
 
     @Transactional
-    public List<TagsDto> selectTagsOrderByTop(Integer size) {
-        size = size == null ? 3 : size;
-        return postsRepository.selectTagsOrderByTop(size);
+    public List<TagsDto> selectTagsOrderByTop(String id) {
+        BlogDto blogInfo = blogRepository.selectTagInfo(id);
+        if(blogInfo == null ) throw new CustomException(ExceptionCode.PATH_ERROR);
+        boolean tagYn =  blogInfo.getTagYn();
+
+        if(!tagYn) {
+            return null;
+        }
+
+        int tagMin = blogInfo.getTagMin();  //태그 몇개부터 노출할건지?
+        int tagCardinal = blogInfo.getTagCardinal(); //태그의 총 개수는 몇개로할건지?
+        List<TagsDto> tagList = postsRepository.selectTagsOrderByTop(id , tagMin , tagCardinal);
+
+
+        return tagList;
     }
 
 

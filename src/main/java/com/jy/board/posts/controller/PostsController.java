@@ -42,9 +42,10 @@ public class PostsController {
     }
 
     //카테고리별 게시글 조회(공개글만 조회)
-    @GetMapping({URI_PREFIX+"/auth/posts/{url}/{parentCategory}" ,
-            URI_PREFIX+"/auth/posts/{url}/{parentCategory}/{childCategory}"})
-    public List<PostsDto> findPosts(@PathVariable String url , @PathVariable String parentCategory
+    @GetMapping({URI_PREFIX+"/auth/posts/{url}/category/{parentCategory}" ,
+            URI_PREFIX+"/auth/posts/{url}/category/{parentCategory}/{childCategory}" ,
+            URI_PREFIX+"/auth/posts/{url}/category"})
+    public List<PostsDto> findPosts(@PathVariable String url , @PathVariable(required = false) String parentCategory
     , @PathVariable(required = false) String childCategory) {
         List<PostsDto> posts = postsService.selectPosts(url , parentCategory , childCategory);
         return posts;
@@ -89,9 +90,9 @@ public class PostsController {
 
 
     //tags 전체 리스트 조회 ( top 3)
-    @GetMapping(URI_PREFIX+"/tags")
-    public List<TagsDto> findTagsOrderByTop(Integer size) {
-        return postsService.selectTagsOrderByTop(size);
+    @GetMapping(URI_PREFIX+"/auth/{id}/tag-box")
+    public List<TagsDto> findTagsOrderByTop(@PathVariable String id) {
+        return postsService.selectTagsOrderByTop(id);
     }
 
 

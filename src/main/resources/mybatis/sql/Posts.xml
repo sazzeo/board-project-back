@@ -3,7 +3,16 @@
 <mapper namespace="com.jy.board.posts.dao.PostsRepository">
 
     <select id="selectPost" resultMap="postsAndTags2" resultType="postsDto">
-        SELECT *
+        SELECT POSTS.POSTS_SEQ,
+               POSTS.CATEGORY_SEQ,
+               POSTS.ID,
+               POSTS.TITLE,
+               POSTS.CONTENT,
+               POSTS.VIEWS,
+               POSTS.LIKE_CNT,
+               POSTS.REG_DATE,
+               TAGS.TAG_SEQ,
+               TAGS.TAG_NAME
         FROM (SELECT POSTS.*
               FROM POSTS
               WHERE POSTS_SEQ = #{postsSeq}) POSTS
@@ -12,11 +21,23 @@
     </select>
 
     <select id="selectPostsOfChildCategory" resultMap="postsAndTags" resultType="postsDto">
-        SELECT *
-        FROM POSTS
-        WHERE ID = #{id}
-          AND CATEGORY_SEQ = (SELECT CATEGORY_SEQ FROM CATEGORY WHERE TITLE = #{title})
-        ORDER BY POSTS_SEQ DESC
+        SELECT POSTS.POSTS_SEQ,
+               POSTS.CATEGORY_SEQ,
+               POSTS.ID,
+               POSTS.TITLE,
+               POSTS.CONTENT,
+               POSTS.VIEWS,
+               POSTS.LIKE_CNT,
+               POSTS.REG_DATE,
+               TAGS.tag_seq,
+               TAGS.TAG_NAME
+        FROM (SELECT *
+              FROM POSTS
+              WHERE ID = #{id}
+                AND CATEGORY_SEQ = (SELECT CATEGORY_SEQ FROM CATEGORY WHERE TITLE = #{title})) POSTS
+                 LEFT JOIN TAGS TAGS
+                           USING (POSTS_SEQ)
+        ORDER BY POSTS_SEQ DESC, TAG_SEQ
     </select>
 
     <select id="selectPostsOfParentCategory" resultMap="postsAndTags" resultType="postsDto">
@@ -29,13 +50,36 @@
                   FROM CATE PARENT
                            LEFT JOIN CATE CHILD
                                      ON (CHILD.UP_CATEGORY = PARENT.CATEGORY_SEQ)
-                  WHERE PARENT.TITLE = #{title})
-        SELECT *
-        FROM POSTS
-        WHERE CATEGORY_SEQ IN (SELECT PARENT_SEQ FROM JOIN_CATE)
-           OR CATEGORY_SEQ IN (SELECT CHILD_SEQ FROM JOIN_CATE)
-        ORDER BY POSTS_SEQ DESC
+                  WHERE PARENT.TITLE = #{title}),
+             FINAL_CATE AS (SELECT *
+                            FROM POSTS
+                            WHERE CATEGORY_SEQ IN (SELECT PARENT_SEQ FROM JOIN_CATE)
+                               OR CATEGORY_SEQ IN (SELECT CHILD_SEQ FROM JOIN_CATE))
+        SELECT POSTS.POSTS_SEQ,
+               POSTS.CATEGORY_SEQ,
+               POSTS.ID,
+               POSTS.TITLE,
+               POSTS.CONTENT,
+               POSTS.VIEWS,
+               POSTS.LIKE_CNT,
+               POSTS.REG_DATE,
+               TAGS.tag_seq,
+               TAGS.TAG_NAME
+        FROM FINAL_CATE POSTS
+                 LEFT JOIN TAGS
+                           USING (POSTS_SEQ)
+        ORDER BY POSTS_SEQ DESC, TAG_SEQ
     </select>
+
+    <select id="selectAllPost" resultMap="postsAndTags" >
+        SELECT * FROM (
+                          SELECT * FROM POSTS
+                          WHERE ID = #{id}) POSTS
+                          LEFT JOIN TAGS
+                                    USING(POSTS_SEQ)
+        ORDER BY POSTS_SEQ DESC , TAG_SEQ
+    </select>
+
 
 
     <insert id="insertPost" parameterType="postsDto">
@@ -173,11 +217,13 @@
 
 
     <select id="selectTagsOrderByTop" resultType="tagsDto">
-        SELECT TAG_NAME, COUNT(TAG_NAME) COUNT
-        FROM TAGS
+        SELECT TAG_NAME , COUNT(TAG_NAME) COUNT FROM TAGS
+        WHERE POSTS_SEQ IN (SELECT POSTS_SEQ FROM POSTS
+            WHERE ID = #{id})
         GROUP BY TAG_NAME
-        HAVING COUNT (*) >= #{size}
-        ORDER BY COUNT DESC, TAG_NAME
+        HAVING COUNT(TAG_NAME) >= #{tagMin}
+        ORDER BY COUNT DESC
+            LIMIT #{tagCardinal}
     </select>
 
     <select id="selectPostsByTagName" resultMap="postsAndTags" resultType="postsDto">

@@ -19,6 +19,9 @@ public interface BlogRepository {
     // yang_woojung -> yangwWoojung
     MemberBlogDto selectProfile(String id);
 
+    BlogDto selectTagInfo(String id);
 
     int updateBlog(BlogDto blogDto);
+
+
 }

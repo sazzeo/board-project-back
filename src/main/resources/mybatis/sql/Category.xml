@@ -37,8 +37,8 @@
                                  TITLE,
                                  SORT,
                                  UP_CATEGORY,
-                                 TOTAL_CNT,
-                                 PUBLIC_YN
+                                 PUBLIC_YN ,
+                                 (SELECT COUNT(POSTS_SEQ) FROM POSTS WHERE POSTS.CATEGORY_SEQ= CATEGORY.CATEGORY_SEQ) TOTAL_CNT
                           FROM CATEGORY
                           WHERE BLOG_SEQ = (SELECT BLOG_SEQ FROM BLOG WHERE ID = #{id}))
         SELECT PARENT.CATEGORY_SEQ   PARENT_CATEGORY_SEQ,
@@ -46,14 +46,14 @@
                PARENT.TITLE          PARENT_TITLE,
                PARENT.SORT           PARENT_SORT,
                PARENT.UP_CATEGORY    PARENT_UP_CATEGORY,
-               PARENT.TOTAL_CNT      PARENT_TOTAL_CNT,
+               PARENT.TOTAL_CNT  + SUM(CHILDREN.total_cnt) OVER(PARTITION BY  PARENT.CATEGORY_SEQ) PARENT_TOTAL_CNT,
                PARENT.PUBLIC_YN      PARENT_PUBLIC_YN,
                CHILDREN.CATEGORY_SEQ CHILDREN_CATEGORY_SEQ,
                CHILDREN.BLOG_SEQ     CHILDREN_BLOG_SEQ,
                CHILDREN.TITLE        CHILDREN_TITLE,
                CHILDREN.SORT         CHILDREN_SORT,
                CHILDREN.UP_CATEGORY  CHILDREN_UP_CATEGORY,
-               CHILDREN.TOTAL_CNT    CHILDREN_TITLE_CNT,
+               CHILDREN.TOTAL_CNT    CHILDREN_TOTAL_CNT,
                CHILDREN.PUBLIC_YN    CHILDREN_PUBLIC_YN
         FROM CATEGORY PARENT
                  LEFT JOIN CATEGORY CHILDREN
@@ -94,6 +94,11 @@
         PUBLIC_YN = #{publicYn} ,
         UP_CATEGORY = #{upCategory} ,
         SORT = #{sort}
+        WHERE CATEGORY_SEQ = #{categorySeq}
+    </update>
+
+    <update id="updateCategoryTotalCnt" parameterType="long">
+        UPDATE CATEGORY SET TOTAL_CNT = TOTAL_CNT +1
         WHERE CATEGORY_SEQ = #{categorySeq}
     </update>
 

@@ -16,7 +16,7 @@ public interface CategoryRepository {
 
     List<CategoryDto> selectCategoriesForInsertPosts(String id);
     int updateCategory(CategoryDto categoryDto) ;
-
+    int updateCategoryTotalCnt(Long categorySeq);
     int deleteCategory(List<Long> categorySeq);
 
 

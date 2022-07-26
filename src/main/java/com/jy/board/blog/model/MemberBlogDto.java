@@ -23,8 +23,8 @@ public class MemberBlogDto{
     private String subTitle;
     private String url;
     private Boolean tagYn;
-    private String tagMin;
-    private String tagCardinal;
+    private int tagMin;
+    private int tagCardinal;
 
 
 }

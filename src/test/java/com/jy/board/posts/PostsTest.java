@@ -35,12 +35,7 @@ public class PostsTest {
      //   System.out.println(postsRepository.test());
     }
 
-    @Test
-    public void selectTags() {
-        System.out.println(postsRepository.selectTagsOrderByTop(3));
 
-
-    }
     @Test
     public void selectPost() {
         Long seq = 100022L;

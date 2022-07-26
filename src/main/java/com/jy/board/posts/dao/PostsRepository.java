@@ -18,6 +18,8 @@ public interface PostsRepository {
     List<PostsDto> selectPostsOfChildCategory(@Param("id") String id , @Param("title") String title);
     List<PostsDto> selectPostsOfParentCategory(@Param("id") String id , @Param("title") String title);
 
+    List<PostsDto> selectAllPost(String id);
+
     List<PostsDto> selectPostsAsOption(@Param("pageable") Pageable pageable ,@Param("s") String s , @Param("o") String o );
 
     int insertPost(PostsDto postsDto);
@@ -35,7 +37,7 @@ public interface PostsRepository {
 
     List<TagsDto> selectTagsBySeqList(@Param(value = "seqList") List<Long> seqList);
 
-    List<TagsDto> selectTagsOrderByTop(int size);
+    List<TagsDto> selectTagsOrderByTop(@Param("id") String id , @Param("tagMin") int tagMin ,@Param("tagCardinal") int tagCardinal);
 
     List<PostsDto> selectPostsByTagName(@Param(value = "tagName") String tagName , @Param(value = "pageable") Pageable pageable);
 
