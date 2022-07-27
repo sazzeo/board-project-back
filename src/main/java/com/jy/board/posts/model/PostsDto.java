@@ -1,5 +1,6 @@
 package com.jy.board.posts.model;
 
+import com.jy.board.common.model.Pageable;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,8 @@ public class PostsDto {
     private int likeCnt;
     private List<TagsDto> tagList;
     private Date regDate;
+
+    private Pageable pageable;
 
 
     @Builder

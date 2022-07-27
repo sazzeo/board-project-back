@@ -42,8 +42,8 @@
         WHERE ID = #{id}
     </update>
 
-    <select id="selectMemberCount">
-        SELECT COUNT(ID)
+    <select id="selectMemberCount" resultType="camelMap">
+        SELECT COUNT(ID) ID_COUNT
         FROM MEMBER
         WHERE ID = #{id}
     </select>

@@ -1,5 +1,6 @@
 package com.jy.board.common.pagination;
 
+import com.jy.board.common.model.Pageable;
 import lombok.ToString;
 
 import java.util.ArrayList;

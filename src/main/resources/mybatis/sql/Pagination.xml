@@ -11,4 +11,9 @@
     <sql id="pagingFooter">
         WHERE ROWNUM BETWEEN #{start} AND #{end}
     </sql>
+
+    <sql id="pagingColumn">
+
+
+    </sql>
 </mapper>

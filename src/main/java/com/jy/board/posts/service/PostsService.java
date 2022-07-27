@@ -3,17 +3,14 @@ package com.jy.board.posts.service;
 import com.jy.board.blog.dao.BlogRepository;
 import com.jy.board.blog.dao.CategoryRepository;
 import com.jy.board.blog.model.BlogDto;
-import com.jy.board.blog.model.MemberBlogDto;
 import com.jy.board.common.exception.CustomException;
 import com.jy.board.common.exception.ExceptionCode;
-import com.jy.board.common.pagination.Pageable;
-import com.jy.board.member.dao.MemberRepository;
+import com.jy.board.common.model.Pageable;
 import com.jy.board.member.model.MemberDto;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +44,11 @@ public class PostsService {
             return postsRepository.selectAllPost(url);
         }
         if(childCategory == null) {
+
+            System.out.println(postsRepository.selectPostsOfParentCategory(url , parentCategory));
             return postsRepository.selectPostsOfParentCategory(url , parentCategory);
         }
+
         return postsRepository.selectPostsOfChildCategory(url , childCategory);
     }
 

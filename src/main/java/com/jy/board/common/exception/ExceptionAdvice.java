@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,12 @@ public class ExceptionAdvice {
     //밸리데이터 오류 에러 (method = RequestMethod.POST, PUT, DELETE)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String , Object>> validError(MethodArgumentNotValidException e) {
-        List<String> message = new ArrayList<>();
+        List<Map<String,String>> message = new ArrayList<>();
         for(ObjectError error :  e.getAllErrors()) {
-            message.add(error.getCodes()[1]);
+            Map<String, String> errorMessage = new HashMap<>();
+            errorMessage.put("label" , error.getDefaultMessage());
+            errorMessage.put("code" , error.getCodes()[1]);
+            message.add(errorMessage);
         }
         return responseEntity.error(message , HttpStatus.BAD_REQUEST);
     }

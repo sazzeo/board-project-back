@@ -1,9 +1,8 @@
 package com.jy.board.posts;
 
 
-import com.jy.board.common.pagination.Pageable;
+import com.jy.board.common.model.Pageable;
 import com.jy.board.posts.dao.PostsRepository;
-import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.service.PostsService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

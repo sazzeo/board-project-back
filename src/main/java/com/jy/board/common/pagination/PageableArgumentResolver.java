@@ -1,5 +1,6 @@
 package com.jy.board.common.pagination;
 
+import com.jy.board.common.model.Pageable;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

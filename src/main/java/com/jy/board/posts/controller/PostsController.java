@@ -2,7 +2,7 @@ package com.jy.board.posts.controller;
 
 
 import com.jy.board.common.pagination.PageDefault;
-import com.jy.board.common.pagination.Pageable;
+import com.jy.board.common.model.Pageable;
 import com.jy.board.common.util.CustomResponseEntity;
 import com.jy.board.member.model.MemberDto;
 import com.jy.board.posts.model.PostsDto;
@@ -10,7 +10,6 @@ import com.jy.board.posts.model.TagsDto;
 import com.jy.board.posts.service.PostsService;
 import com.jy.board.security.UserToken;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

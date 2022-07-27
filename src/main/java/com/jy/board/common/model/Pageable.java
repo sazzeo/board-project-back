@@ -1,8 +1,11 @@
-package com.jy.board.common.pagination;
+package com.jy.board.common.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.ibatis.type.Alias;
 
+@Alias("pageable")
 @Data
 public class Pageable {
 

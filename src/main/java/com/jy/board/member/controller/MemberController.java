@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 public class MemberController {
@@ -20,7 +22,8 @@ public class MemberController {
 
     //회원가입
     @PostMapping(URI_PREFIX + "/auth/join")
-    public String addMember(@RequestBody MemberDto memberDto) {
+    public String addMember(@Valid @RequestBody MemberDto memberDto) {
+
         memberService.insertMember(memberDto);
         return "ok";
     }
@@ -60,7 +63,7 @@ public class MemberController {
 
     /*아이디 중복체크*/
     @GetMapping(URI_PREFIX + "/auth/id-check")
-    public int findMemberExist(String id) {
+    public Long findMemberExist(String id) {
         return memberService.selectMemberCount(id);
     }
 

@@ -1,6 +1,7 @@
 package com.jy.board.common.pagination;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jy.board.common.model.Pageable;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;

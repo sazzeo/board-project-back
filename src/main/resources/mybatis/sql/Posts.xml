@@ -20,7 +20,7 @@
                            USING (POSTS_SEQ)
     </select>
 
-    <select id="selectPostsOfChildCategory" resultMap="postsAndTags" resultType="postsDto">
+    <select id="selectPostsOfChildCategory" resultMap="postsAndTags2" resultType="postsDto">
         SELECT POSTS.POSTS_SEQ,
                POSTS.CATEGORY_SEQ,
                POSTS.ID,
@@ -40,7 +40,7 @@
         ORDER BY POSTS_SEQ DESC, TAG_SEQ
     </select>
 
-    <select id="selectPostsOfParentCategory" resultMap="postsAndTags" resultType="postsDto">
+    <select id="selectPostsOfParentCategory" resultMap="postsAndTags2" resultType="postsDto">
         WITH CATE AS
                  (SELECT *
                   FROM CATEGORY
@@ -55,7 +55,9 @@
                             FROM POSTS
                             WHERE CATEGORY_SEQ IN (SELECT PARENT_SEQ FROM JOIN_CATE)
                                OR CATEGORY_SEQ IN (SELECT CHILD_SEQ FROM JOIN_CATE))
-        SELECT POSTS.POSTS_SEQ,
+        SELECT
+                (select count(posts_seq) from  FINAL_CATE POSTS) TOTAL_ELEMENTS, --7/27 추가 된 메소드
+                POSTS.POSTS_SEQ,
                POSTS.CATEGORY_SEQ,
                POSTS.ID,
                POSTS.TITLE,
@@ -71,15 +73,15 @@
         ORDER BY POSTS_SEQ DESC, TAG_SEQ
     </select>
 
-    <select id="selectAllPost" resultMap="postsAndTags" >
-        SELECT * FROM (
-                          SELECT * FROM POSTS
-                          WHERE ID = #{id}) POSTS
-                          LEFT JOIN TAGS
-                                    USING(POSTS_SEQ)
-        ORDER BY POSTS_SEQ DESC , TAG_SEQ
+    <select id="selectAllPost" resultMap="postsAndTags">
+        SELECT *
+        FROM (SELECT *
+              FROM POSTS
+              WHERE ID = #{id}) POSTS
+                 LEFT JOIN TAGS
+                           USING (POSTS_SEQ)
+        ORDER BY POSTS_SEQ DESC, TAG_SEQ
     </select>
-
 
 
     <insert id="insertPost" parameterType="postsDto">
@@ -139,7 +141,6 @@
             <result property="tagName" column="TAG_NAME"/>
         </collection>
     </resultMap>
-
     <!--카운트 없는버전-->
     <resultMap type="postsDto" id="postsAndTags2">
         <id property="postsSeq" column="POSTS_SEQ"/>
@@ -217,11 +218,12 @@
 
 
     <select id="selectTagsOrderByTop" resultType="tagsDto">
-        SELECT TAG_NAME , COUNT(TAG_NAME) COUNT FROM TAGS
+        SELECT TAG_NAME, COUNT(TAG_NAME) COUNT
+        FROM TAGS
         WHERE POSTS_SEQ IN (SELECT POSTS_SEQ FROM POSTS
             WHERE ID = #{id})
         GROUP BY TAG_NAME
-        HAVING COUNT(TAG_NAME) >= #{tagMin}
+        HAVING COUNT (TAG_NAME) >= #{tagMin}
         ORDER BY COUNT DESC
             LIMIT #{tagCardinal}
     </select>

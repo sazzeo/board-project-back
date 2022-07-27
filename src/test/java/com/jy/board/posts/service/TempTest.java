@@ -1,7 +1,7 @@
 package com.jy.board.posts.service;
 
 
-import com.jy.board.common.pagination.Pageable;
+import com.jy.board.common.model.Pageable;
 import com.jy.board.config.MybatisConfig;
 import com.jy.board.posts.dao.PostsRepository;
 import com.jy.board.posts.dao.TestRepository;

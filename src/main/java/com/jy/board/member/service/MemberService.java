@@ -5,6 +5,8 @@ import com.jy.board.blog.dao.BlogRepository;
 import com.jy.board.blog.dao.CategoryRepository;
 import com.jy.board.blog.model.BlogDto;
 import com.jy.board.blog.model.CategoryDto;
+import com.jy.board.common.exception.CustomException;
+import com.jy.board.common.exception.ExceptionCode;
 import com.jy.board.member.dao.MemberRepository;
 import com.jy.board.member.model.MemberDto;
 import com.jy.board.security.JwtTokenProvider;
@@ -33,6 +35,11 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public void insertMember(MemberDto memberDto) {
+
+        Long memberCount = memberRepository.selectMemberCount(memberDto.getId()).get("idCount");
+        if(memberCount > 0) {
+            throw new CustomException(ExceptionCode.DUPLICATE_ID); //아이디 중복 에러
+        }
         String password = passwordEncoder.encode(memberDto.getPassword());
         memberDto.setPassword(password);
         //멤버추가
@@ -69,7 +76,11 @@ public class MemberService implements UserDetailsService {
         return selectMember;
     }
 
-    //얘가 알아서 처리해 주는 부분..??
+    /*
+    설명 :
+    * 작성일 : 2022. 07. 27.
+    * @author : jy.lim
+     */
     @Override
     public UserDetails loadUserByUsername(String username) {
         MemberDto selectMember = memberRepository.selectMember(username);
@@ -78,6 +89,11 @@ public class MemberService implements UserDetailsService {
         return userDetails;
     }
 
+    /**
+     *
+     * @param memberDto
+     * @return
+     */
     @Transactional
     public int updateMember(MemberDto memberDto) {
 
@@ -87,9 +103,9 @@ public class MemberService implements UserDetailsService {
         return memberRepository.updateMember(memberDto);
     }
 
-    //=>불값 전송...?? 없음 있음 data:null이면?
-    public int selectMemberCount(String id) {
-        return memberRepository.selectMemberCount(id);
+    public Long selectMemberCount(String id) {
+        Long idCount = memberRepository.selectMemberCount(id).get("idCount");
+        return idCount;
     }
 
 }
