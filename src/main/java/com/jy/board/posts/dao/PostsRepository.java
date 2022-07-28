@@ -6,6 +6,7 @@ import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,7 +40,7 @@ public interface PostsRepository {
 
     List<TagsDto> selectTagsOrderByTop(@Param("id") String id , @Param("tagMin") int tagMin ,@Param("tagCardinal") int tagCardinal);
 
-    List<PostsDto> selectPostsByTagName(@Param(value = "tagName") String tagName , @Param(value = "pageable") Pageable pageable);
+    List<PostsDto> selectPostsByTagName(@Param(value = "id") String id , @Param(value = "tagName") String tagName);
 
     int deletePostsBySeq(Long postsSeq);
 

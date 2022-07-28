@@ -33,6 +33,13 @@ public class MemberService implements UserDetailsService {
     private final BlogRepository blogRepository;
     private final CategoryRepository categoryRepository;
 
+
+    /**
+     * 설명 : 멤버 가입 + 블로그 생성 + 카테고리 생성 
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param memberDto
+     */
     @Transactional
     public void insertMember(MemberDto memberDto) {
 
@@ -62,6 +69,14 @@ public class MemberService implements UserDetailsService {
         categoryRepository.insertCategory(categoryDto);
     }
 
+
+    /**
+     * 설명 : 로그인 + 토큰 발행
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param memberDto
+     * @return
+     */
     @Transactional
     public MemberDto selectMember(MemberDto memberDto) {
         MemberDto selectMember = memberRepository.selectMember(memberDto.getId());
@@ -76,10 +91,13 @@ public class MemberService implements UserDetailsService {
         return selectMember;
     }
 
-    /*
-    설명 :
-    * 작성일 : 2022. 07. 27.
-    * @author : jy.lim
+
+    /**
+     * 설명 : 안씀 
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param username the username identifying the user whose data is required.
+     * @return
      */
     @Override
     public UserDetails loadUserByUsername(String username) {
@@ -90,7 +108,9 @@ public class MemberService implements UserDetailsService {
     }
 
     /**
-     *
+     * 설명 : 유저 정보 업데이트
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
      * @param memberDto
      * @return
      */
@@ -103,6 +123,13 @@ public class MemberService implements UserDetailsService {
         return memberRepository.updateMember(memberDto);
     }
 
+    /**
+     * 설명 : 유저 아이디 중복확인용
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param id
+     * @return
+     */
     public Long selectMemberCount(String id) {
         Long idCount = memberRepository.selectMemberCount(id).get("idCount");
         return idCount;

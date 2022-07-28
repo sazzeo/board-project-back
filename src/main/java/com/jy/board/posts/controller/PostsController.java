@@ -97,12 +97,12 @@ public class PostsController {
 
 
     //태그 이름으로 게시글 조회
-    @GetMapping(URI_PREFIX + "/posts/tags/{tagName}")
-    public ResponseEntity<List<PostsDto>> findPostsByTagName(@PathVariable String tagName , Pageable pageable) {
-        Map<String,  Object> map = new HashMap<>();
-        map.put("posts" , postsService.selectPostsByTagName(tagName , pageable));
-        map.put("pageable" , pageable);
-        return customResponseEntity.success(map, HttpStatus.OK);
+    @GetMapping(URI_PREFIX + "/auth/posts/{url}/tags/{tagName}")
+    public List<PostsDto> findPostsByTagName(@PathVariable String url ,  @PathVariable String tagName ) {
+        List<PostsDto> postList =  postsService.selectPostsByTagName(url , tagName);
+        return postList;
+
+
     }
 
 

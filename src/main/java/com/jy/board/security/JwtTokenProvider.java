@@ -9,8 +9,7 @@ import java.util.Date;
 @Component
     public class JwtTokenProvider {
 
-//        private static final String JWT_SECRET = "secretKey";
-    private static final String JWT_SECRET = "asdfasdfdsafadsfdsafdasf";
+    private static final String JWT_SECRET = "a380e85f-262a-48fe-8d45-9dc7d96744a9";
     // 토큰 유효시간
     private static final long JWT_EXPIRATION_MS = 60*60*1000L; //1시간으로 지정
 
@@ -29,7 +28,7 @@ import java.util.Date;
                 .claim("name" , memberDto.getName())
                 .setIssuedAt(new Date()) //현재 시간 기반으로 생성
                 .setExpiration(expiryDate) //만료시간 셋팅
-                .signWith(SignatureAlgorithm.HS512, JWT_SECRET) // 사용할 암호화 알고리즘, signature에 들어갈 secret 값 세팅
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET) // 사용할 암호화 알고리즘, signature 에 들어갈 secret 값 세팅
                 .compact(); //jwt토큰(간략화) 만들기
     }
 

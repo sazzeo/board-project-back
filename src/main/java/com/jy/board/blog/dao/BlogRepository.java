@@ -14,7 +14,7 @@ public interface BlogRepository {
     int insertBlog(BlogDto blogDto);
 
     //사용자 프로필 박스
-    Map<String, Object> selectProfileBoxInfo(String url);
+    CamelMap<String, Object> selectProfileBoxInfo(String url);
 
     // yang_woojung -> yangwWoojung
     MemberBlogDto selectProfile(String id);

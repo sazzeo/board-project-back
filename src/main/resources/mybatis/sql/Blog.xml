@@ -9,7 +9,7 @@
         </selectKey>
     </insert>
 
-    <select id="selectProfileBoxInfo" resultType="map">
+    <select id="selectProfileBoxInfo" resultType="camelMap">
         SELECT MEMBER.ID,
                MEMBER.NAME,
                BLOG.TITLE,

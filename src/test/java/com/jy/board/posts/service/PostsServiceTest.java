@@ -14,10 +14,7 @@ public class PostsServiceTest {
     @Mock
     PostsRepository postsRepository;
 
-    @BeforeEach
-    public void init() {
-        this.postsService = new PostsService(this.postsRepository);
-    }
+
 
     @Test
     public void tt() {

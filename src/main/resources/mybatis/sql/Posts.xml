@@ -33,8 +33,8 @@
                TAGS.TAG_NAME
         FROM (SELECT *
               FROM POSTS
-              WHERE ID = #{id}
-                AND CATEGORY_SEQ = (SELECT CATEGORY_SEQ FROM CATEGORY WHERE TITLE = #{title})) POSTS
+              WHERE
+                      CATEGORY_SEQ = (SELECT CATEGORY_SEQ FROM CATEGORY WHERE TITLE = #{title} and BLOG_SEQ = (SELECT BLOG_SEQ FROM BLOG WHERE ID = #{id}))) POSTS
                  LEFT JOIN TAGS TAGS
                            USING (POSTS_SEQ)
         ORDER BY POSTS_SEQ DESC, TAG_SEQ
@@ -55,9 +55,8 @@
                             FROM POSTS
                             WHERE CATEGORY_SEQ IN (SELECT PARENT_SEQ FROM JOIN_CATE)
                                OR CATEGORY_SEQ IN (SELECT CHILD_SEQ FROM JOIN_CATE))
-        SELECT
-                (select count(posts_seq) from  FINAL_CATE POSTS) TOTAL_ELEMENTS, --7/27 추가 된 메소드
-                POSTS.POSTS_SEQ,
+        SELECT (select count(posts_seq) from FINAL_CATE POSTS) TOTAL_ELEMENTS, --7/27 추가 된 메소드
+               POSTS.POSTS_SEQ,
                POSTS.CATEGORY_SEQ,
                POSTS.ID,
                POSTS.TITLE,
@@ -224,27 +223,16 @@
             WHERE ID = #{id})
         GROUP BY TAG_NAME
         HAVING COUNT (TAG_NAME) >= #{tagMin}
-        ORDER BY COUNT DESC
+        ORDER BY COUNT DESC , TAG_NAME
             LIMIT #{tagCardinal}
     </select>
 
-    <select id="selectPostsByTagName" resultMap="postsAndTags" resultType="postsDto">
-        <include refid="Pagination.pagingHeader"/>
-        POSTS.* ,
-        TAGS.TAG_SEQ ,
-        TAGS.TAG_NAME
-        FROM (SELECT POSTS.* , COUNT(POSTS_SEQ) OVER() COUNT
-        FROM POSTS
-        WHERE POSTS_SEQ IN (SELECT
-        POSTS_SEQ
-        FROM TAGS
-        WHERE TAG_NAME = #{tagName})
-        ) POSTS
-        LEFT JOIN TAGS
-        USING (POSTS_SEQ)
-        ) POSTS
-        WHERE ROWNUM BETWEEN #{pageable.start} AND #{pageable.end} --임시
-        ORDER BY ROWNUM , TAG_SEQ
+    <select id="selectPostsByTagName" resultMap="postsAndTags2" resultType="postsDto">
+        SELECT POSTS.*, TAGS.TAG_SEQ, TAGS.TAG_NAME
+        FROM (SELECT POSTS_SEQ, CATEGORY_SEQ, ID, TITLE, CONTENT, VIEWS, LIKE_CNT FROM POSTS WHERE ID = #{id}) POSTS
+                 LEFT JOIN TAGS
+                           USING (POSTS_SEQ)
+        WHERE POSTS_SEQ IN (SELECT POSTS_SEQ FROM TAGS WHERE TAG_NAME = #{tagName})
     </select>
 
     <!--    게시글 삭제-->
