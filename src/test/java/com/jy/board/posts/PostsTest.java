@@ -22,7 +22,6 @@ public class PostsTest {
     @Test
     public void selectPostsTest() {
         Pageable pageable = new Pageable();
-        System.out.println(postsRepository.selectPosts(pageable));
 
 
     }

@@ -41,14 +41,16 @@ public class BlogController {
     //카테고리 보기(수정용)
     @GetMapping(URI_PREFIX + "/category")
     public List<CategoryDto> findCategories(@UserToken MemberDto memberDto) {
-        return blogService.selectCategories(memberDto.getId());
+        List<CategoryDto> categoryDtoList = blogService.selectCategories(memberDto.getId());
+        return categoryDtoList;
     }
 
 
     //카테고리 box보기
     @GetMapping(URI_PREFIX + "/auth/{url}/category")
     public List<CategoryDto> findCategories(@PathVariable String url) {
-        return blogService.selectCategories(url);
+        List<CategoryDto> categoryDtoList = blogService.selectCategories(url);
+        return categoryDtoList;
     }
 
 

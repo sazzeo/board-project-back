@@ -25,10 +25,14 @@ public class PostsService {
 
     private final BlogRepository blogRepository;
 
-    private final CategoryRepository categoryRepository;
 
-
-    //게시글 리스트 조회
+    /**
+     * 설명 : 게시글 리스트 조회
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim
+     * @param pageable
+     * @return
+     */
     @Transactional
     public List<PostsDto> selectPosts(Pageable pageable) {
         List<PostsDto> res = postsRepository.selectPosts(pageable);
@@ -36,7 +40,15 @@ public class PostsService {
     }
 
 
-
+    /**
+     * 설명 : 카테고리별 글 선택 기능
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim
+     * @param url
+     * @param parentCategory
+     * @param childCategory
+     * @return
+     */
     //카테고리별 글 선택기능
     @Transactional
     public List<PostsDto> selectPosts(String url , String parentCategory , String childCategory) {
@@ -54,8 +66,8 @@ public class PostsService {
 
 
 
-    /** 주석 메소드 만들때 달기
-     * 설명 :
+    /**
+     * 설명 : 검색기능...(미완성)
      * 작성일 : 2022. 07. 01.
      * @author : jy.lim
      * @param pageable
@@ -75,16 +87,13 @@ public class PostsService {
     }
 
 
-    //게시글 단건조회
-
     /**
+     * 설명 : 포스트 단건 조회
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim
+     * @param postsSeq
      * @return
      */
-    @Transactional
-    public PostsDto selectPostBySeq() {
-        return selectPostBySeq(null);
-    }
-
     @Transactional
     public PostsDto selectPostBySeq(Long postsSeq) {
         PostsDto postsDto = postsRepository.selectPost(postsSeq);
@@ -95,8 +104,13 @@ public class PostsService {
     }
 
 
-
-
+    /**
+     * 설명 : 포스트 작성
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param memberDto
+     * @param postsDto
+     */
     @Transactional
     public void insertPost(MemberDto memberDto , PostsDto postsDto ) {
 
@@ -109,6 +123,13 @@ public class PostsService {
        // categoryRepository.updateCategoryTotalCnt(postsDto.getCategorySeq());
     }
 
+    /**
+     * 설명 : 게시글 수정
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param postsSeq
+     * @param postsDto
+     */
     @Transactional
     public void updatePost(Long postsSeq , PostsDto postsDto) {
         postsDto.setPostsSeq(postsSeq);
@@ -138,6 +159,14 @@ public class PostsService {
         postsRepository.updatePost(postsDto);
     }
 
+    
+    /**
+     * 설명 : 태그로 posts 서칭
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param postsSeq
+     * @return
+     */
     @Transactional
     public List<String> selectTagListBySeq(Long postsSeq) {
         List<String> TagNameList = postsRepository.selectTagsBySeq(postsSeq).stream().map(TagsDto::getTagName).collect(Collectors.toList());
@@ -145,6 +174,13 @@ public class PostsService {
         return TagNameList;
     }
 
+    /**
+     * 설명 : tag box 정보 가져오기
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param id
+     * @return
+     */
     @Transactional
     public List<TagsDto> selectTagsOrderByTop(String id) {
         BlogDto blogInfo = blogRepository.selectTagInfo(id);
@@ -164,12 +200,27 @@ public class PostsService {
     }
 
 
+    /**
+     * 설명 : 태그이름으로 posts 검색
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param id
+     * @param tagName
+     * @return
+     */
     @Transactional
-    public List<PostsDto> selectPostsByTagName(String tagName , Pageable pageable ) {
-        return postsRepository.selectPostsByTagName(tagName ,pageable);
+    public List<PostsDto> selectPostsByTagName(String id , String tagName  ) {
+        return postsRepository.selectPostsByTagName(id ,tagName);
     }
 
-
+    /**
+     * 설명 : 게시글 삭제
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param postsSeq
+     * @param memberDto
+     */
+    @Transactional
     public void deletePosts(Long postsSeq , MemberDto memberDto) {
         PostsDto postsDto = postsRepository.selectPost(postsSeq);
         if(postsDto == null) throw new CustomException(ExceptionCode.PATH_ERROR);

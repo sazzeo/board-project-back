@@ -1,12 +1,10 @@
 package com.jy.board.config;
 
-import com.jy.board.security.handler.CustomAuthenticationEntryPoint;
 import com.jy.board.security.CustomFilter;
-import com.jy.board.security.PermitUrl;
+import com.jy.board.security.handler.CustomAuthenticationEntryPoint;
 import com.jy.board.security.handler.JwtAuthenticationExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -41,8 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 //.mvcMatchers(HttpMethod.POST, PermitUrl.POST.getUrls()).permitAll()
                 //.antMatchers(PermitUrl.GET.getUrls()).permitAll() //
-                .antMatchers("/api/board/auth/**")//.permitAll()
-                .hasAnyRole("ANONYMOUS","USER")
+                .antMatchers("/api/board/auth/**").hasAnyRole("ANONYMOUS", "USER")
                 .anyRequest().authenticated() //나머지는 인증 필요함
                 .and()
                 .sessionManagement() //세션 끄기
@@ -52,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .accessDeniedHandler(new JwtAuthenticationExceptionHandler())
                 .and()
-             //   .anonymous().disable()
+                //   .anonymous().disable()
                 .cors() //rest api 기반이므로 cors 켜기
                 .and()
                 .csrf()//rest api기반이므로 csrf도 끄기

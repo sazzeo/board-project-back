@@ -35,23 +35,6 @@ public class MemberController {
         return authMember;
     }
 
-    @PostMapping(URI_PREFIX + "/test")
-    public String auth(@RequestHeader HttpHeaders httpHeaders) {
-        System.out.println(httpHeaders.get("Authorization"));
-        String token = (String) httpHeaders.get("Authorization").get(0);
-        MemberDto memberDto = JwtTokenProvider.getMember(token);
-        System.out.println(memberDto);
-        return "ok";
-    }
-
-    @PostMapping(URI_PREFIX + "/test2")
-    public String noAuth() {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-        MemberDto principal = (MemberDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal);
-        System.out.println("통과");
-        return "ok";
-    }
 
     @PutMapping(URI_PREFIX + "/user")
     public String modifyMember(@RequestBody MemberDto memberDto, @UserToken MemberDto authMember) {

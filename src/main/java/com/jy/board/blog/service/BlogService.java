@@ -20,11 +20,26 @@ public class BlogService {
     private final BlogRepository blogRepository;
     private final CategoryRepository categoryRepository;
 
+    /**
+     * 설명 : 유저 블로그 진입시 블로그정보 + 사용자 정보 가져오기
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param url
+     * @return
+     */
     @Transactional
     public Map<String, Object> selectProfileBoxInfo(String url) {
         return blogRepository.selectProfileBoxInfo(url);
+    
     }
 
+    /**
+     * 설명 : 로그인 유저의 정보 가져오기
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param memberDto
+     * @return
+     */
     @Transactional
     public MemberBlogDto selectUserBlogProfile(MemberDto memberDto) {
         String id = memberDto.getId();
@@ -32,22 +47,52 @@ public class BlogService {
     }
 
 
+    /**
+     * 설명 : 블로그 정보 update
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param blogDto
+     * @return
+     */
     @Transactional
     public int updateBlog(BlogDto blogDto) {
         return blogRepository.updateBlog(blogDto);
     }
 
+
+    /**
+     * 설명 : 카테고리 box 용 데이터 불러오기
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim 
+     * @param id
+     * @return
+     */
     @Transactional
     public List<CategoryDto> selectCategories(String id) {
         List<CategoryDto> categories = categoryRepository.selectCategories(id);
         return categories;
     }
 
+    /**
+     * 설명 : 포스트 작성시 카테고리 선택용
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim
+     * @param id
+     * @return
+     */
     @Transactional
     public List<CategoryDto> selectCategoriesForInsertPosts(String id) {
         return categoryRepository.selectCategoriesForInsertPosts(id);
     }
 
+    /**
+     * 설명 : 카테고리 update 기능
+     * 작성일 : 2022. 07. 28.
+     * @author : jy.lim
+     * @param memberDto
+     * @param newCategoryList
+     * @return
+     */
     @Transactional
     public int updateCategories(MemberDto memberDto, List<CategoryDto> newCategoryList){
         List<CategoryDto> oldCategoryList = categoryRepository.selectCategoriesForUpdate(memberDto.getId());
