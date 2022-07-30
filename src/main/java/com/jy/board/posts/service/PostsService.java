@@ -1,7 +1,6 @@
 package com.jy.board.posts.service;
 
 import com.jy.board.blog.dao.BlogRepository;
-import com.jy.board.blog.dao.CategoryRepository;
 import com.jy.board.blog.model.BlogDto;
 import com.jy.board.common.exception.CustomException;
 import com.jy.board.common.exception.ExceptionCode;

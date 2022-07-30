@@ -6,7 +6,6 @@ import com.jy.board.posts.model.PostsDto;
 import com.jy.board.posts.model.TagsDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

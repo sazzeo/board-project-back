@@ -228,7 +228,15 @@
     </select>
 
     <select id="selectPostsByTagName" resultMap="postsAndTags2" resultType="postsDto">
-        SELECT POSTS.*, TAGS.TAG_SEQ, TAGS.TAG_NAME
+        SELECT POSTS.POSTS_SEQ ,
+               POSTS.CATEGORY_SEQ ,
+               POSTS.ID ,
+               POSTS.TITLE,
+               POSTS.CONTENT ,
+               POSTS.VIEWS ,
+               POSTS.LIKE_CNT ,
+               POSTS.REG_DATE ,
+             , TAGS.TAG_SEQ, TAGS.TAG_NAME
         FROM (SELECT POSTS_SEQ, CATEGORY_SEQ, ID, TITLE, CONTENT, VIEWS, LIKE_CNT FROM POSTS WHERE ID = #{id}) POSTS
                  LEFT JOIN TAGS
                            USING (POSTS_SEQ)
