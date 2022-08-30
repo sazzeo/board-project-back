@@ -2,11 +2,9 @@ package com.jy.board.posts;
 
 import com.jy.board.blog.model.CategoryDto;
 import com.jy.board.security.PermitUrl;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class RunTest {
 
