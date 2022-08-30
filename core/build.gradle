@@ -1,0 +1,8 @@
+dependencies {
+
+    implementation 'com.google.guava:guava:r09'
+}
+
+dependencyManagement {
+
+}
